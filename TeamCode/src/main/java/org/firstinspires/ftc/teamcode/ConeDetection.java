@@ -123,9 +123,13 @@ public class ConeDetection
         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
+		/* XXX:
+		   - updating to sdk v8.2 removed AprilTagDetection.pose.{yaw,pitch,roll}
+		   - apriltags support is now in the core sdk under org.firstinspires.ftc.vision.apriltag
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+		*/
     }
 
     public int getDirection()

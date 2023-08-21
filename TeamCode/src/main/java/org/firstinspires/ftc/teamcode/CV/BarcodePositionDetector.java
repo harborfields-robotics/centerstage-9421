@@ -18,9 +18,6 @@ import java.io.*;
 
 // copied archived class from Freight Frenzy
 public class BarcodePositionDetector extends OpenCvPipeline {
-
-
-
     Telemetry telemetry;
 
     public enum BarcodePosition {
