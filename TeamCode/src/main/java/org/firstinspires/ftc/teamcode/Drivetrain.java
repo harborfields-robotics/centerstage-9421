@@ -30,12 +30,12 @@ public class Drivetrain
 	public Drivetrain(Hardware hardware)
 	{
 		this.hardware = hardware;
-		motorFL = hardware.hardwareMap.get(DcMotor.class, "motor-fl"); // control hub port 0
-		motorBL = hardware.hardwareMap.get(DcMotor.class, "motor-bl"); // control hub port 1
-		motorBR = hardware.hardwareMap.get(DcMotor.class, "motor-br"); // control hub port 2
-		motorFR = hardware.hardwareMap.get(DcMotor.class, "motor-fr"); // control hub port 3
+		this.motorFL = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_FL_NAME);
+		this.motorBL = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_BL_NAME);
+		this.motorBR = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_BR_NAME);
+		this.motorFR = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_FR_NAME);
 
-		motors = Arrays.asList(motorFL, motorBL, motorBR, motorFR);
+		this.motors = Arrays.asList(motorFL, motorBL, motorBR, motorFR);
 
 		for (DcMotor m: motors) {
 			m.setPower(0);
@@ -57,6 +57,7 @@ public class Drivetrain
 		motorBR.setTargetPosition(br);
 	}
 
+	/* XXX: this method changes the order of the input array? */
 	public double[] normalizePowers(double[] powers) {
 		Arrays.sort(powers);
 		if (powers[3] > 1) {
@@ -77,8 +78,7 @@ public class Drivetrain
 
 	public void setPowerSmooth(DcMotor motor, double target, double delta)
 	{
-		double power = motor.getPower();
-		motor.setPower(power + delta * Math.signum(target - power));
+		motor.setPower(motor.getPower() + delta * Math.signum(target - motor.getPower()));
 	}
 
 	public double[] computeMotorPowers(double deltaY, double deltaX, double deltaTheta)

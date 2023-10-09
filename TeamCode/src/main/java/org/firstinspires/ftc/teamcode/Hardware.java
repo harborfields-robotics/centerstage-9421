@@ -20,12 +20,21 @@ public class Hardware
 	public HardwareMap hardwareMap;
 	public Drivetrain drivetrain;
 	public Telemetry telemetry;
+	public DoubleVision doubleVision;
+
+	public static final String
+		WEBCAM_NAME = "webcam", /* USB port */
+		MOTOR_FL_NAME = "motor-fl", /* port 0 */
+		MOTOR_BL_NAME = "motor-bl", /* port 1 */
+		MOTOR_BR_NAME = "motor-br", /* port 2 */
+		MOTOR_FR_NAME = "motor-fr"; /* port 3 */
 
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
 		this.hardwareMap = hardwareMap;
 		this.telemetry = telemetry;
-		drivetrain = new Drivetrain(this);
+		this.drivetrain = new Drivetrain(this);
+		this.doubleVision = new DoubleVision(this);
 	}
 
 	public String getDeviceName(HardwareDevice device)
@@ -33,9 +42,6 @@ public class Hardware
 		Set<String> names = hardwareMap.getNamesOf(device);
 		return names.isEmpty() ? "<unknown device>" : names.toArray(new String[0])[0];
 	}
-
-	public void init() throws InterruptedException {}
-	public void stop() throws InterruptedException {}
 
 	public static boolean motorAtTarget(DcMotor motor, int initialPosition)
 	{

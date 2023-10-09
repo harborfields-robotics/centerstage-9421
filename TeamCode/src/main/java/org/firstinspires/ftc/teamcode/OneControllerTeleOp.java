@@ -19,7 +19,6 @@ public class OneControllerTeleOp extends LinearOpMode
 	public void runOpMode() throws InterruptedException
 	{
 		hardware = new Hardware(hardwareMap, telemetry);
-		hardware.init();
 
 		waitForStart();
 
