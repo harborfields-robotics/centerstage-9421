@@ -26,7 +26,7 @@ public class DoubleVision
 	public static final String TFOD_MODEL_PATH = "/sdcard/FIRST/tflitemodels/CenterStage.tflite";
 	public static final String TFOD_MODEL_LABELS[] = { "pixel" };
 	public static final Size CAMERA_RESOLUTION = new Size(640, 480);
-
+    
 	public DoubleVision(Hardware hardware)
 	{
 		this.hardware = hardware;
@@ -46,6 +46,7 @@ public class DoubleVision
 	{
 		telemetryAprilTag();
 		telemetryTfod();
+        hardware.telemetry.update();
 	}
 
     private void telemetryAprilTag() {
