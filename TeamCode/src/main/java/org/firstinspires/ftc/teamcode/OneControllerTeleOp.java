@@ -22,11 +22,31 @@ public class OneControllerTeleOp extends LinearOpMode
 
 		waitForStart();
 
-		DriveThread driveSpeed = new DriveThread(hardware);
-		driveSpeed.start();
+		DriveThread driveThread = new DriveThread(hardware);
+		driveThread.start();
 
-		while (opModeIsActive())
-			;
+		// SlidesThread slidesThread = new SlidesThread(hardware);
+		// slidesThread.start();
+
+		while (opModeIsActive()) {
+			if (gamepad1.a) {
+				hardware.testMotor.setPower(0.6);
+			} else {
+				hardware.testMotor.setPower(0.0);
+			}
+		}
+	}
+
+	public class SlidesThread extends Thread
+	{
+		private Hardware hardware;
+
+		@Override
+		public void run() {
+			while (opModeIsActive()) {
+
+			}
+		}
 	}
 
 	public class DriveThread extends Thread

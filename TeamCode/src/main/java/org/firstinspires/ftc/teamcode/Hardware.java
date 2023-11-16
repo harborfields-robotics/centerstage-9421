@@ -22,12 +22,16 @@ public class Hardware
 	public Telemetry telemetry;
 	public DoubleVision doubleVision;
 
+	public DcMotor slidesMotor, intakeMotor, testMotor;
+
 	public static final String
 		WEBCAM_NAME = "webcam", /* USB port */
-		MOTOR_FL_NAME = "motor-fl", /* port 0 */
-		MOTOR_BL_NAME = "motor-bl", /* port 1 */
-		MOTOR_BR_NAME = "motor-br", /* port 2 */
-		MOTOR_FR_NAME = "motor-fr"; /* port 3 */
+		MOTOR_FL_NAME = "motor-fl", /* control hub port 0 */
+		MOTOR_BL_NAME = "motor-bl", /* control hub port 1 */
+		MOTOR_BR_NAME = "motor-br", /* control hub port 2 */
+		MOTOR_FR_NAME = "motor-fr", /* control hub port 3 */
+		SLIDES_NAME = "slides", /* expansion hub port ? */
+		INTAKE_NAME = "intake"; /* expansion hub port ? */
 
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
@@ -35,6 +39,9 @@ public class Hardware
 		this.telemetry = telemetry;
 		this.drivetrain = new Drivetrain(this);
 		this.doubleVision = new DoubleVision(this);
+		// this.slidesMotor = hardwareMap.get(DcMotor.class, SLIDES_NAME);
+		// this.intakeMotor = hardwareMap.get(DcMotor.class, INTAKE_NAME);
+		this.testMotor = hardwareMap.get(DcMotor.class, "test");
 	}
 
 	public String getDeviceName(HardwareDevice device)
