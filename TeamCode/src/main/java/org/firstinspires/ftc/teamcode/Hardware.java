@@ -21,8 +21,9 @@ public class Hardware
 	public Drivetrain drivetrain;
 	public Telemetry telemetry;
 	public DoubleVision doubleVision;
+	public Slides slides;
 
-	public DcMotor slidesMotor, intakeMotor, testMotor;
+	public DcMotor intakeMotor, testMotor;
 
 	public static final String
 		WEBCAM_NAME = "webcam", /* USB port */
@@ -30,8 +31,8 @@ public class Hardware
 		MOTOR_BL_NAME = "motor-bl", /* control hub port 1 */
 		MOTOR_BR_NAME = "motor-br", /* control hub port 2 */
 		MOTOR_FR_NAME = "motor-fr", /* control hub port 3 */
-		SLIDES_NAME = "slides", /* expansion hub port ? */
-		INTAKE_NAME = "intake"; /* expansion hub port ? */
+		SLIDES_NAME = "slides-motor", /* expansion hub port 0 */
+		INTAKE_NAME = "intake-motor"; /* expansion hub port 1 */
 
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
@@ -39,9 +40,10 @@ public class Hardware
 		this.telemetry = telemetry;
 		this.drivetrain = new Drivetrain(this);
 		this.doubleVision = new DoubleVision(this);
-		// this.slidesMotor = hardwareMap.get(DcMotor.class, SLIDES_NAME);
-		// this.intakeMotor = hardwareMap.get(DcMotor.class, INTAKE_NAME);
-		this.testMotor = hardwareMap.get(DcMotor.class, "test");
+		this.slides = new Slides(this);
+
+		this.intakeMotor = hardwareMap.get(DcMotor.class, INTAKE_NAME);
+		this.intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
 
 	public String getDeviceName(HardwareDevice device)

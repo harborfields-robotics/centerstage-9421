@@ -57,11 +57,12 @@ public class TestingOP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        motor = hardwareMap.get(DcMotor.class, "testmotor");
+        motor = hardwareMap.get(DcMotor.class, "intake-motor");
 
         motor.setDirection(DcMotor.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -69,12 +70,15 @@ public class TestingOP extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            double power = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
+            // double power = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
+            double power = gamepad1.triangle ? 100 : 0;
 
             motor.setPower(power);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "Power: %.2f" + power);
+            telemetry.addData("Motors", "Power: %f", power);
+            telemetry.addData("Stick", "Left Stick: (%f, %f)", gamepad1.left_stick_x, gamepad1.left_stick_y);
+            telemetry.addData("Stick", "Right Stick: (%f, %f)", gamepad1.left_stick_x, gamepad1.left_stick_y);
             telemetry.update();
         }
     }

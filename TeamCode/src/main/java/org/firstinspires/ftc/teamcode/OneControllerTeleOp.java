@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
 public class OneControllerTeleOp extends LinearOpMode
@@ -29,11 +30,10 @@ public class OneControllerTeleOp extends LinearOpMode
 		// slidesThread.start();
 
 		while (opModeIsActive()) {
-			if (gamepad1.a) {
-				hardware.testMotor.setPower(0.6);
-			} else {
-				hardware.testMotor.setPower(0.0);
-			}
+			if (gamepad1.right_trigger > 0.5)
+				hardware.intakeMotor.setPower(1);
+			else
+				hardware.intakeMotor.setPower(0);
 		}
 	}
 
