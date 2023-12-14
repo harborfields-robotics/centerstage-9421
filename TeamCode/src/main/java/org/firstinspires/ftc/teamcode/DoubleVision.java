@@ -22,6 +22,7 @@ public class DoubleVision
 	private TfodProcessor tfod;
 	private VisionPortal visionPortal;
 	private Hardware hardware;
+    private WebcamName webcam;
 
 	public static final String TFOD_MODEL_PATH = "/sdcard/FIRST/tflitemodels/CenterStage.tflite";
 	public static final String TFOD_MODEL_LABELS[] = { "pixel" };
@@ -30,13 +31,14 @@ public class DoubleVision
 	public DoubleVision(Hardware hardware)
 	{
 		this.hardware = hardware;
+        this.webcam = hardware.hardwareMap.tryGet(WebcamName.class, Hardware.WEBCAM_NAME);
 		this.aprilTag = new AprilTagProcessor.Builder().build();
 		this.tfod = new TfodProcessor.Builder()
 			.setModelFileName(TFOD_MODEL_PATH)
 			.setModelLabels(TFOD_MODEL_LABELS)
 			.build();
 		this.visionPortal = new VisionPortal.Builder()
-			.setCamera(hardware.hardwareMap.get(WebcamName.class, Hardware.WEBCAM_NAME))
+			.setCamera(webcam)
 			.setCameraResolution(CAMERA_RESOLUTION)
 			.addProcessors(tfod, aprilTag)
 			.build();

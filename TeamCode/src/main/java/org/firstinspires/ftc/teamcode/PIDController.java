@@ -8,23 +8,18 @@ import java.io.Serializable;
 public class PIDController implements Serializable
 {
     private DcMotor motor;
-    private double prevTime, prevError;
-    private double errorSum, errorSlope;
-    private String motorName;
     private ElapsedTime timer = new ElapsedTime();
-    private double target;
     private PIDConstants constants;
+    private double errorSum, errorSlope;
+    private double prevTime, prevError;
+    private double target;
 
-    public PIDController(String motorName, Hardware hardware)
+    public PIDController(DcMotor motor, PIDConstants constants)
     {
-        this.motorName = motorName;
-    }
-
-    public void setup(Hardware hardware)
-    {
-        motor = hardware.hardwareMap.get(DcMotor.class, motorName);
-        // motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.motor = motor;
+        this.constants = constants;
+        this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public double getError()
@@ -36,6 +31,7 @@ public class PIDController implements Serializable
     {
         return timer.seconds();
     }
+    public boolean isAtTarget() { return getError() == 0; }
 
     public void loop()
     {

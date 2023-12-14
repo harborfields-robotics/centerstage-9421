@@ -63,7 +63,7 @@ public class TestingOP extends LinearOpMode
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        motor = hardwareMap.get(DcMotor.class, "intake-motor");
+        motor = hardwareMap.get(DcMotor.class, "slides-motor");
 
         motor.setDirection(DcMotor.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -72,7 +72,7 @@ public class TestingOP extends LinearOpMode
 
         while (opModeIsActive()) {
             // double power = Range.clip(gamepad1.right_stick_x, -1.0, 1.0);
-            double power = gamepad1.triangle ? 100 : 0;
+            double power = gamepad1.right_stick_y;
 
             motor.setPower(power);
 

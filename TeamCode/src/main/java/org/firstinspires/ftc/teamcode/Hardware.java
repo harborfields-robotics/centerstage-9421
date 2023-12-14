@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.lang.Math;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Hardware
 {
@@ -27,7 +29,15 @@ public class Hardware
 
 	public DcMotor intakeMotor, testMotor;
 
-	public Map<String, PIDConstants> pidMap;
+	public Map<String, PIDConstants> pidConstants = new HashMap<>(Stream.of(new Object[][]{
+			{ MOTOR_FL_NAME, new PIDConstants(0, 0, 0) },
+			{ MOTOR_BL_NAME, new PIDConstants(0, 0, 0) },
+			{ MOTOR_BR_NAME, new PIDConstants(0, 0, 0) },
+			{ MOTOR_FR_NAME, new PIDConstants(0, 0, 0) },
+			{ SLIDES_NAME,   new PIDConstants(0, 0, 0) },
+	}).collect(Collectors.toMap(i -> (String) i[0], i -> (PIDConstants) i[1])));
+
+	public Servo wristServo, wheelServo;
 
 	public static final String
 		WEBCAM_NAME = "webcam", /* USB port */
@@ -36,7 +46,9 @@ public class Hardware
 		MOTOR_BR_NAME = "motor-br", /* control hub port 2 */
 		MOTOR_FR_NAME = "motor-fr", /* control hub port 3 */
 		SLIDES_NAME = "slides-motor", /* expansion hub port 0 */
-		INTAKE_NAME = "intake-motor"; /* expansion hub port 1 */
+		INTAKE_NAME = "intake-motor", /* expansion hub port 1 */
+		WHEEL_NAME = "wheel-servo",
+		WRIST_NAME = "wrist-servo";
 
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
@@ -48,6 +60,19 @@ public class Hardware
 
 		this.intakeMotor = hardwareMap.get(DcMotor.class, INTAKE_NAME);
 		this.intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		// this.wheelServo = hardwareMap.get(Servo.class, WHEEL_NAME);
+	}
+
+	public static void resetMotorEncoder(DcMotor motor)
+	{
+		DcMotor.RunMode mode = motor.getMode();
+		motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		motor.setMode(mode);
+	}
+
+	public PIDConstants lookupPIDConstants(String motorName)
+	{
+		return pidConstants.get(motorName);
 	}
 
 	public String getDeviceName(HardwareDevice device)

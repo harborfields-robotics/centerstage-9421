@@ -40,7 +40,8 @@ public class Drivetrain
 		for (DcMotor m: motors) {
 			m.setPower(0);
 			m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-			m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+			m.setMode(STOP_AND_RESET_ENCODER);
+			m.setMode(RUN_WITHOUT_ENCODER);
 		}
 
 		motorFL.setDirection(DcMotor.Direction.REVERSE);
