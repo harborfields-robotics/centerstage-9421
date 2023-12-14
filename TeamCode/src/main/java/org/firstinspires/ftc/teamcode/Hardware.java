@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.lang.Math;
 
@@ -24,6 +26,8 @@ public class Hardware
 	public Slides slides;
 
 	public DcMotor intakeMotor, testMotor;
+
+	public Map<String, PIDConstants> pidMap;
 
 	public static final String
 		WEBCAM_NAME = "webcam", /* USB port */

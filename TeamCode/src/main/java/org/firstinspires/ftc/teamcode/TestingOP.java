@@ -51,7 +51,8 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Testing Opmode", group="Linear OpMode")
-public class TestingOP extends LinearOpMode {
+public class TestingOP extends LinearOpMode
+{
     // Declare OpMode members.
     private DcMotor motor;
     private ElapsedTime runtime = new ElapsedTime();
@@ -77,8 +78,6 @@ public class TestingOP extends LinearOpMode {
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "Power: %f", power);
-            telemetry.addData("Stick", "Left Stick: (%f, %f)", gamepad1.left_stick_x, gamepad1.left_stick_y);
-            telemetry.addData("Stick", "Right Stick: (%f, %f)", gamepad1.left_stick_x, gamepad1.left_stick_y);
             telemetry.update();
         }
     }
