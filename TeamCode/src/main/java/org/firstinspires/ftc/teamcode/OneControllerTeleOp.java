@@ -34,6 +34,15 @@ public class OneControllerTeleOp extends LinearOpMode
 				hardware.intakeMotor.setPower(1);
 			else
 				hardware.intakeMotor.setPower(0);
+
+			if(gamepad1.x)
+				hardware.wheelServo.setPosition(0.5);
+			else
+				hardware.wheelServo.setPosition(0);
+			telemetry.addData("Wheel Position", hardware.wheelServo.getPosition());
+			telemetry.addData("Wrist Position", hardware.wristServo.getPosition());
+			telemetry.addData("Elbow Position", hardware.elbowServo.getPosition());
+			telemetry.update();
 		}
 	}
 

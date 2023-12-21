@@ -27,7 +27,7 @@ public class Hardware
 	public DoubleVision doubleVision;
 	public Slides slides;
 
-	public DcMotor intakeMotor, testMotor;
+	public DcMotor intakeMotor;
 
 	public Map<String, PIDConstants> pidConstants = new HashMap<>(Stream.of(new Object[][]{
 			{ MOTOR_FL_NAME, new PIDConstants(0, 0, 0) },
@@ -37,7 +37,7 @@ public class Hardware
 			{ SLIDES_NAME,   new PIDConstants(0, 0, 0) },
 	}).collect(Collectors.toMap(i -> (String) i[0], i -> (PIDConstants) i[1])));
 
-	public Servo wristServo, wheelServo;
+	public Servo wristServo, wheelServo, elbowServo;
 
 	public static final String
 		WEBCAM_NAME = "webcam", /* USB port */
@@ -47,8 +47,9 @@ public class Hardware
 		MOTOR_FR_NAME = "motor-fr", /* control hub port 3 */
 		SLIDES_NAME = "slides-motor", /* expansion hub port 0 */
 		INTAKE_NAME = "intake-motor", /* expansion hub port 1 */
-		WHEEL_NAME = "wheel-servo",
-		WRIST_NAME = "wrist-servo";
+		WHEEL_NAME = "wheel-servo", /*expansion servo port 0 */
+		WRIST_NAME = "wrist-servo",/*expansion servo port 1 */
+		ELBOW_NAME = "elbow-servo"; /*expansion servo port 2 */
 
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
@@ -60,7 +61,10 @@ public class Hardware
 
 		this.intakeMotor = hardwareMap.get(DcMotor.class, INTAKE_NAME);
 		this.intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		// this.wheelServo = hardwareMap.get(Servo.class, WHEEL_NAME);
+		this.wheelServo = hardwareMap.get(Servo.class, WHEEL_NAME);
+		this.wristServo = hardwareMap.get(Servo.class, WRIST_NAME);
+		this.elbowServo = hardwareMap.get(Servo.class, ELBOW_NAME);
+		this.elbowServo = hardwareMap.get(Servo.class, ELBOW_NAME);
 	}
 
 	public static void resetMotorEncoder(DcMotor motor)
