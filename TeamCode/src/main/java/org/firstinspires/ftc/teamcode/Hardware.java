@@ -29,13 +29,6 @@ public class Hardware
 
 	public DcMotor intakeMotor;
 
-	public Map<String, PIDConstants> pidConstants = new HashMap<>(Stream.of(new Object[][]{
-			{ MOTOR_FL_NAME, new PIDConstants(0, 0, 0) },
-			{ MOTOR_BL_NAME, new PIDConstants(0, 0, 0) },
-			{ MOTOR_BR_NAME, new PIDConstants(0, 0, 0) },
-			{ MOTOR_FR_NAME, new PIDConstants(0, 0, 0) },
-			{ SLIDES_NAME,   new PIDConstants(0, 0, 0) },
-	}).collect(Collectors.toMap(i -> (String) i[0], i -> (PIDConstants) i[1])));
 
 	public Servo wristServo, wheelServo, elbowServo;
 
@@ -59,24 +52,13 @@ public class Hardware
 		this.doubleVision = new DoubleVision(this);
 		this.slides = new Slides(this);
 
-		this.intakeMotor = hardwareMap.get(DcMotor.class, INTAKE_NAME);
-		this.intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		this.wheelServo = hardwareMap.get(Servo.class, WHEEL_NAME);
-		this.wristServo = hardwareMap.get(Servo.class, WRIST_NAME);
-		this.elbowServo = hardwareMap.get(Servo.class, ELBOW_NAME);
-		this.elbowServo = hardwareMap.get(Servo.class, ELBOW_NAME);
 	}
 
-	public static void resetMotorEncoder(DcMotor motor)
+	public static void resetEncoder(DcMotor motor)
 	{
 		DcMotor.RunMode mode = motor.getMode();
 		motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor.setMode(mode);
-	}
-
-	public PIDConstants lookupPIDConstants(String motorName)
-	{
-		return pidConstants.get(motorName);
 	}
 
 	public String getDeviceName(HardwareDevice device)

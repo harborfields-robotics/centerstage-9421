@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODERS;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -106,6 +102,7 @@ public class Drivetrain
 			motors.get(i).setPower(powers[i]);
 	}
 
+	// TODO: remove all; use RoadRunner methods instead
 	public void strafeLeft(double tileCount, double power)
 	{
 		motors.forEach(m -> m.setMode(STOP_AND_RESET_ENCODER));
