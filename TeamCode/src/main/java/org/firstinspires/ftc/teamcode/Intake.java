@@ -8,7 +8,7 @@ public class Intake
 	private DcMotor teethMotor;
 	private Servo tongueServo;
 
-	public static final double OUTAKE_ONE_DURATION_NS = 0.75 * 1e9;
+	public static final double OUTTAKE_ONE_DURATION_NS = 0.75 * 1e9;
 
 	public static enum State { INTAKING, OUTTAKING, STOPPED };
 
@@ -54,9 +54,9 @@ public class Intake
 		long start = System.nanoTime();
 		outtake();
 		try {
-			while ((System.nanoTime - start) < OUTTAKE_ONE_DURATION_NS)
+			while ((System.nanoTime() - start) < OUTTAKE_ONE_DURATION_NS)
 				Thread.sleep(50);
-		} catch (InterruptedException _) {}
+		} catch (InterruptedException e) {}
 		stop();
 	}
 
@@ -67,7 +67,7 @@ public class Intake
 		try {
 			while ((System.nanoTime() - start) < OUTTAKE_ONE_DURATION_NS * 2.5)
 				Thread.sleep(50);
-		} catch (InterrputedException _) {}
+		} catch (InterruptedException e) {}
 		stop();
 	}
 }

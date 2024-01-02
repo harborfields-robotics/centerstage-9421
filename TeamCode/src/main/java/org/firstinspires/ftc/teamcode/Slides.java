@@ -34,7 +34,7 @@ public class Slides
 
 	public void setPower(double power)
 	{
-		int position = motor.getPosition();
+		int position = motor.getCurrentPosition();
 		if (power > 0 && MAX_POSITION - position <= DEADZONE_SIZE)
 			power = 0;
 		if (power < 0 && MIN_POSITION - position >= -DEADZONE_SIZE)
@@ -42,7 +42,7 @@ public class Slides
 		motor.setPower(power);
 	}
 
-	public void getPower()
+	public double getPower()
 	{
 		return motor.getPower();
 	}
@@ -76,7 +76,7 @@ public class Slides
 		try {
 			while (motor.isBusy())
 				Thread.sleep(50);
-		} catch (InterruptedException _) {}
+		} catch (InterruptedException e) {}
 		motor.setMode(mode);
 	}
 }

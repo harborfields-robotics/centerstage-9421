@@ -24,11 +24,10 @@ public class OneControllerTeleOp extends LinearOpMode
 		waitForStart();
 
 		DriveThread driveThread = new DriveThread(hardware);
-		DriveThread.start();
+		driveThread.start();
 
 		while (opModeIsActive()) {
 			telemetry.clear();
-			telemetry.addData("Slides Position", hardware.slides.motor.getCurrentPosition());
 			telemetry.update();
 		}
 	}
