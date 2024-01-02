@@ -26,8 +26,7 @@ public class Hardware
 	public Telemetry telemetry;
 	public DoubleVision doubleVision;
 	public Slides slides;
-
-	public DcMotor intakeMotor;
+	public Intake intake;
 
 	// TODO: update configuration names
 	public static final String
@@ -37,7 +36,6 @@ public class Hardware
 		BL_MOTOR_NAME      = "bl-motor",      /* control hub port 1   */
 		BR_MOTOR_NAME      = "br-motor",      /* control hub port 2   */
 		FR_MOTOR_NAME      = "fr-motor",      /* control hub port 3   */
-	public Servo wristServo, wheelServo, elbowServo;
 
 		// They're really more like lips to be honest but they _look_ like teeth
 		TEETH_MOTOR_NAME   = "intake-motor",  /* expansion hub port 1 */
@@ -57,9 +55,12 @@ public class Hardware
 	{
 		this.hardwareMap = hardwareMap;
 		this.telemetry = telemetry;
+		this.telemetry.setAutoClear(false);
 		this.drivetrain = new Drivetrain(this);
 		this.doubleVision = new DoubleVision(this);
 		this.slides = new Slides(this);
+		this.intake = new Intake(this);
+	}
 
 	public <T> T get(Class<T> type, String name)
 	{

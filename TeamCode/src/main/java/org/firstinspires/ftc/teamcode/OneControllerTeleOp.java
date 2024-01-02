@@ -24,40 +24,16 @@ public class OneControllerTeleOp extends LinearOpMode
 		waitForStart();
 
 		DriveThread driveThread = new DriveThread(hardware);
-		driveThread.start();
-
-		// SlidesThread slidesThread = new SlidesThread(hardware);
-		// slidesThread.start();
+		DriveThread.start();
 
 		while (opModeIsActive()) {
-			if (gamepad1.right_trigger > 0.5)
-				hardware.intakeMotor.setPower(1);
-			else
-				hardware.intakeMotor.setPower(0);
-
-			if(gamepad1.x)
-				hardware.wheelServo.setPosition(0.5);
-			else
-				hardware.wheelServo.setPosition(0);
-			telemetry.addData("Wheel Position", hardware.wheelServo.getPosition());
-			telemetry.addData("Wrist Position", hardware.wristServo.getPosition());
-			telemetry.addData("Elbow Position", hardware.elbowServo.getPosition());
+			telemetry.clear();
+			telemetry.addData("Slides Position", hardware.slides.motor.getCurrentPosition());
 			telemetry.update();
 		}
 	}
 
-	public class SlidesThread extends Thread
-	{
-		private Hardware hardware;
-
-		@Override
-		public void run() {
-			while (opModeIsActive()) {
-
-			}
-		}
-	}
-
+	// TODO: factor out logic into drivetrain method
 	public class DriveThread extends Thread
 	{
 		private Hardware hardware;
