@@ -29,20 +29,29 @@ public class Hardware
 
 	public DcMotor intakeMotor;
 
+	// TODO: update configuration names
+	public static final String
+		WEBCAM_NAME        = "webcam",        /* USB port             */
 
+		FL_MOTOR_NAME      = "fl-motor",      /* control hub port 0   */
+		BL_MOTOR_NAME      = "bl-motor",      /* control hub port 1   */
+		BR_MOTOR_NAME      = "br-motor",      /* control hub port 2   */
+		FR_MOTOR_NAME      = "fr-motor",      /* control hub port 3   */
 	public Servo wristServo, wheelServo, elbowServo;
 
-	public static final String
-		WEBCAM_NAME = "webcam", /* USB port */
-		MOTOR_FL_NAME = "motor-fl", /* control hub port 0 */
-		MOTOR_BL_NAME = "motor-bl", /* control hub port 1 */
-		MOTOR_BR_NAME = "motor-br", /* control hub port 2 */
-		MOTOR_FR_NAME = "motor-fr", /* control hub port 3 */
-		SLIDES_NAME = "slides-motor", /* expansion hub port 0 */
-		INTAKE_NAME = "intake-motor", /* expansion hub port 1 */
-		WHEEL_NAME = "wheel-servo", /*expansion servo port 0 */
-		WRIST_NAME = "wrist-servo",/*expansion servo port 1 */
-		ELBOW_NAME = "elbow-servo"; /*expansion servo port 2 */
+		// They're really more like lips to be honest but they _look_ like teeth
+		TEETH_MOTOR_NAME   = "intake-motor",  /* expansion hub port 1 */
+		TONGUE_SERVO_NAME  = "wheel-servo",   /* expansion hub port 0 */
+
+		// I guess his mouth is on his hand
+		SLIDES_MOTOR_NAME  = "slides-motor",  /* expansion hub port 0 */
+		WRIST_SERVO_NAME   = "wrist-servo",   /* expansion hub port 1 */
+		ELBOW_SERVO_NAME   = "elbow-servo",   /* expansion hub port 2 */
+
+		// FIXME: encoders must use the names of existing motors due to space constraints
+		LEFT_ENCODER_NAME  = "left-encoder",  /* expansion hub port 1 */
+		BACK_ENCODER_NAME  = "back-encoder",  /* expansion hub port 2 */
+		RIGHT_ENCODER_NAME = "right-encoder"; /* expansion hub port 3 */
 
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
@@ -52,6 +61,9 @@ public class Hardware
 		this.doubleVision = new DoubleVision(this);
 		this.slides = new Slides(this);
 
+	public <T> T get(Class<T> type, String name)
+	{
+		return hardwareMap.get(type, name);
 	}
 
 	public static void resetEncoder(DcMotor motor)

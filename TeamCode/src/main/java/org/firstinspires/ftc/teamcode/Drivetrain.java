@@ -13,7 +13,9 @@ import java.lang.Math;
 public class Drivetrain
 {
 	public DcMotor motorFL, motorFR, motorBL, motorBR;
+	public DcMotor encoderLeft, encoderBack, encoderRight;
 	public List<DcMotor> motors;
+	public List<DcMotor> encoders;
 	public Hardware hardware;
 
 	public static final double
@@ -22,16 +24,20 @@ public class Drivetrain
 		TICKS_PER_SIDE_DIFFERENCE = 30,
 		STRAFE_CONSTANT = 1.3;
 
-	// initializes motors
 	public Drivetrain(Hardware hardware)
 	{
 		this.hardware = hardware;
-		this.motorFL = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_FL_NAME);
-		this.motorBL = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_BL_NAME);
-		this.motorBR = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_BR_NAME);
-		this.motorFR = hardware.hardwareMap.get(DcMotor.class, Hardware.MOTOR_FR_NAME);
 
+		this.motorFL = hardware.get(DcMotor.class, Hardware.FL_MOTOR_NAME);
+		this.motorBL = hardware.get(DcMotor.class, Hardware.BL_MOTOR_NAME);
+		this.motorBR = hardware.get(DcMotor.class, Hardware.BR_MOTOR_NAME);
+		this.motorFR = hardware.get(DcMotor.class, Hardware.FR_MOTOR_NAME);
 		this.motors = Arrays.asList(motorFL, motorBL, motorBR, motorFR);
+
+		// this.encoderLeft = hardware.get(DcMotor.class, Hardware.LEFT_ENCODER_NAME);
+		// this.encoderBack = hardware.get(DcMotor.class, Hardware.BACK_ENCODER_NAME);
+		// this.encoderRight = hardware.get(DcMotor.class, Hardware.RIGHT_ENCODER_NAME);
+		// this.encoders = Arrays.asList(encoderLeft, encoderBack, encoderRight);
 
 		for (DcMotor m: motors) {
 			m.setPower(0);
@@ -44,6 +50,9 @@ public class Drivetrain
 		motorFR.setDirection(DcMotor.Direction.FORWARD);
 		motorBL.setDirection(DcMotor.Direction.REVERSE);
 		motorBR.setDirection(DcMotor.Direction.FORWARD);
+
+		// for (DcMotor e: encoders)
+		// 	e.setMode(STOP_AND_RESET_ENCODER);
 	}
 
 	public void setMotorTargets(int fl, int fr, int bl, int br)
