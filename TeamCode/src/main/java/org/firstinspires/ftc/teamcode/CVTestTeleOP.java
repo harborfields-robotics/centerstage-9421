@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp
+@TeleOp(name="CV Testing OpMode", group="Testing OpMode")
 public class CVTestTeleOP extends LinearOpMode
 {
 	private static Hardware hardware;
@@ -19,7 +19,7 @@ public class CVTestTeleOP extends LinearOpMode
 			hardware.doubleVision.putTelemetry();
 			try {
 				Thread.sleep(100);
-			} catch (InterruptedException __) {}
+			} catch (InterruptedException _) {}
 		}
 	}
 }
