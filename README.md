@@ -11,5 +11,6 @@ This repository contains code by team #9421 "Hydrofluoric" for the CENTERSTAGE g
 - [FTCLib Documentation](https://docs.ftclib.org/ftclib/)
 - [FTCLib Javadoc](https://javadoc.io/doc/com.arcrobotics/ftclib/latest/index.html)
 - [Road Runner Documentation](https://acme-robotics.gitbook.io/road-runner/)
+- [Road Runner 1.0.0 Documentation](https://rr.brott.dev/)
 - [Learn Road Runner](https://learnroadrunner.com/)
 - [Road Runner Javadoc](https://acmerobotics.github.io/road-runner/core/0.5.5/javadoc/index.html)
