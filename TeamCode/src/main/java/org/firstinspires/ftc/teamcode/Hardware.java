@@ -84,16 +84,4 @@ public class Hardware
 		Set<String> names = hardwareMap.getNamesOf(device);
 		return names.isEmpty() ? "<unknown device>" : names.toArray(new String[0])[0];
 	}
-
-	public static boolean motorAtTarget(DcMotor motor, int initialPosition)
-	{
-		int position = motor.getCurrentPosition(),
-			target = motor.getTargetPosition();
-		return target < initialPosition ? position <= target : position >= target;
-	}
-
-	public static boolean motorAtTarget(DcMotor motor)
-	{
-		return motorAtTarget(motor, 0);
-	}
 }
