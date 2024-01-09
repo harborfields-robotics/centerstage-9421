@@ -3,14 +3,24 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
+/**
+  * The class representing the intake/outtake functionality of the robot.
+  * This encompasses both the teeth and the tongue.
+  */
 public class Intake
 {
 	private DcMotor teethMotor;
 	private Servo tongueServo;
 
+	/**
+	  * The time it takes to outtake one pixel, in nanoseconds.
+	  */
 	public static final double OUTTAKE_ONE_DURATION_NS = 0.75 * 1e9;
 
-	public static enum State { INTAKING, OUTTAKING, STOPPED };
+	/**
+	  * Represents all possible states of the intake.
+	  */
+	public static enum State { INTAKING, OUTTAKING, STOPPED }
 
 	private State state = State.STOPPED;
 
@@ -23,6 +33,9 @@ public class Intake
 		this.tongueServo.setPosition(0.5);
 	}
 
+	/**
+	  * Continuously outtakes pixels.
+	  */
 	public void outtake()
 	{
 		state = State.OUTTAKING;
@@ -30,6 +43,9 @@ public class Intake
 		teethMotor.setPower(1);
 	}
 
+	/**
+	  * Continuously intakes pixels.
+	  */
 	public void intake()
 	{
 		state = State.INTAKING;
@@ -37,6 +53,9 @@ public class Intake
 		teethMotor.setPower(-1);
 	}
 
+	/**
+	  * Stops any operation and return to the rest state.
+	  */
 	public void stop()
 	{
 		state = State.OUTTAKING;
@@ -49,6 +68,10 @@ public class Intake
 		return state;
 	}
 
+	/**
+	  * Outtakes one pixel from the sandwitch.
+	  * @see #loop()
+	  */
 	public void outtakeOne()
 	{
 		long start = System.nanoTime();
@@ -60,6 +83,9 @@ public class Intake
 		stop();
 	}
 
+	/**
+	  * Outtakes both pixels in the sandwitch.
+	  */
 	public void outtakeAll()
 	{
 		long start = System.nanoTime();

@@ -19,6 +19,9 @@ import java.lang.Math;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+  * The Hardware class contains all other hardware subsystems, including telemetry and computer vision.
+  */
 public class Hardware
 {
 	public HardwareMap hardwareMap;
@@ -54,7 +57,9 @@ public class Hardware
 
 		LAUNCHER_MOTOR_NAME = "launcher-motor"; /* expansion hub port ? */
 
-
+	/**
+	  * Creates a hardware object and initializes all hardware components.
+	  */
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
 		this.hardwareMap = hardwareMap;
@@ -67,11 +72,22 @@ public class Hardware
 		this.launcher = new Launcher(this);
 	}
 
-	public <T> T get(Class<T> type, String name)
+	/**
+	  * Initializes and returns a hardware object representing the named device.
+	  * @param type the type of the device
+	  * @param name the name of the device in the configuration
+	  * @return an object representing the device
+	  * @see com.qualcomm.robotcore.hardware.HardwareMap#get(Class<? extends T>, String)
+	  */
+	public <T> T get(Class<? extends T> type, String name)
 	{
 		return hardwareMap.get(type, name);
 	}
 
+	/**
+	  * Resets the encoder value to zero and returns the motor to its previous state.
+	  * @param motor the motor to operate on
+	  */
 	public static void resetEncoder(DcMotor motor)
 	{
 		DcMotor.RunMode mode = motor.getMode();
@@ -79,6 +95,11 @@ public class Hardware
 		motor.setMode(mode);
 	}
 
+	/**
+	  * Returns the name of a hardware device as it appears in the configuration.
+	  * @param device an object representing the hardware device
+	  * @return the name of the device in the configuration
+	  */
 	public String getDeviceName(HardwareDevice device)
 	{
 		Set<String> names = hardwareMap.getNamesOf(device);

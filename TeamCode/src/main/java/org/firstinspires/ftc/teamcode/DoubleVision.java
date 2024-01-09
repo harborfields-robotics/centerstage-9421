@@ -16,6 +16,14 @@ import android.util.Size;
 import java.util.*;
 import java.lang.*;
 
+/**
+  * The DoubleVision class uses computer vision to identify AprilTags, pixels and the team game element.
+  * AprilTags are detected using the FTC AprilTag API.
+  * Pixels and the team game element are detected using TensorFlow Object Detection.
+  * @see org.firstinspires.ftc.vision.VisionPortal
+  * @see org.firstinspires.ftc.vision.apriltag
+  * @see org.firstinspires.ftc.vision.tfod
+  */
 public class DoubleVision
 {
 	private AprilTagProcessor aprilTag;
@@ -24,8 +32,19 @@ public class DoubleVision
 	private Hardware hardware;
     private WebcamName webcam;
 
+	/**
+	  * The path on disk of the TFOD model to use.
+	  */
 	public static final String TFOD_MODEL_PATH = "/sdcard/FIRST/tflitemodels/CenterStage.tflite";
-	public static final String TFOD_MODEL_LABELS[] = { "pixel" };
+
+	/**
+	  * An array containing the indexed labels contained in the TFOD model.
+	  */
+	public static final String[] TFOD_MODEL_LABELS = { "pixel" };
+
+	/**
+	  * The target resolution of the camera.
+	  */
 	public static final Size CAMERA_RESOLUTION = new Size(640, 480);
     
 	public DoubleVision(Hardware hardware)
@@ -44,6 +63,11 @@ public class DoubleVision
 			.build();
 	}
 
+	/**
+	  * Report all detections to the telemetry stream.
+	  * @see #telemetryAprilTag()
+	  * @see #telemetryTfod()
+	  */
 	public void putTelemetry()
 	{
 		telemetryAprilTag();
@@ -51,7 +75,11 @@ public class DoubleVision
         hardware.telemetry.update();
 	}
 
-    private void telemetryAprilTag() {
+	/**
+	  * Report all AprilTag detections to the telemetry stream.
+	  */
+    private void telemetryAprilTag()
+	{
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         hardware.telemetry.addData("# AprilTags Detected", currentDetections.size());
 
@@ -69,7 +97,11 @@ public class DoubleVision
         }
     }
 
-    private void telemetryTfod() {
+	/**
+	  * Report all TFOD detections to the telemetry stream.
+	  */
+    private void telemetryTfod()
+	{
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         hardware.telemetry.addData("# Objects Detected", currentRecognitions.size());
         for (Recognition recognition : currentRecognitions) {

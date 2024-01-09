@@ -5,20 +5,43 @@ import com.qualcomm.robotcore.util.*;
 import java.util.*;
 import java.util.stream.*;
 
+/**
+  * The Slides class handles the movement of the slides and the sandwitch.
+  */
 public class Slides
 {
     public DcMotor motor;
 	public Servo wristServo, elbowServo;
 
-	public static final double
-		SPOOL_CIRCUMFERENCE = 112 / 25.4, // 112 mm
-		SLIDES_ANGLE = 37; // ? degrees
+	/**
+	  * The circumference of the slides' spool, in inches.
+	  */
+	public static final double SPOOL_CIRCUMFERENCE = 112 / 25.4; // 112 mm
 		
-	public static final int
-		MAX_POSITION = 6125,
-		MIN_POSITION = 0,
-		DEADZONE_SIZE = 20,
-		SET_POSITIONS[] = { MIN_POSITION, 2000, 4000, MAX_POSITION };
+	/**
+	  * The highest possible position of the slides, in encoder ticks.
+	  */
+	public static final int MAX_POSITION = 6125;
+
+	/**
+	  * The lowest possible position of the slides, in encoder ticks.
+	  * This should be the rest position of the slides.
+	  */
+	public static final int MIN_POSITION = 0;
+
+	/**
+	  * The size, in encoder ticks, of the safety zone at both ends of the slides' range.
+	  * The slides will be prevented from moving further into a dead zone.
+	  */
+	public static final int DEADZONE_SIZE = 20;
+
+	/**
+	  * The array of pre-defined slides positions for ease of driving.
+	  * Each element is the value of the motor encoder at the set position's height
+	  * @see #getCurrentSetPositionIndex()
+	  * @see #runToSetPosition(int)
+	  */
+	public static final int SET_POSITIONS[] = { MIN_POSITION, MAX_POSITION * 1/3, MAX_POSITION * 2/3, MAX_POSITION };
 
     public Slides(Hardware hardware)
     {
@@ -32,6 +55,12 @@ public class Slides
 		this.elbowServo = hardware.get(Servo.class, Hardware.ELBOW_SERVO_NAME);
     }
 
+	/**
+	  * Sets the power of the slides motor, being careful not to exceed its limits.
+	  * This method relies on {@link #loop()} being called frequently to ensure the limits will not be exceeded in the future.
+	  * @param power the new power of the motor
+	  * @see #loop()
+	  */
 	public void setPower(double power)
 	{
 		int position = motor.getCurrentPosition();
@@ -42,11 +71,18 @@ public class Slides
 		motor.setPower(power);
 	}
 
+	/**
+	  * Gets the current power of the slides motor.
+	  */
 	public double getPower()
 	{
 		return motor.getPower();
 	}
 
+	/**
+	  * Returns the index of the set position closest to the slides' current height.
+	  * @return the index of this position in {@link #SET_POSITIONS}
+	  */
 	public int getCurrentSetPositionIndex()
 	{
 		int position = motor.getCurrentPosition();
@@ -62,11 +98,21 @@ public class Slides
 		return minIndex;
 	}
 
-	public void runToSetPosition(int position)
+	/**
+	  * Instructs the slides motor to run to the set position of the given index without blocking the current thread.
+	  * The index is clamped to fall within the bounds of the array.
+	  * @param index the index of the target set position in {@link #SET_POSITIONS}
+	  */
+	public void runToSetPosition(int index)
 	{
-		runToPosition(SET_POSITIONS[Range.clip(position, 0, SET_POSITIONS.length - 1)]);
+		runToPosition(SET_POSITIONS[Range.clip(index, 0, SET_POSITIONS.length - 1)]);
 	}
 
+	/**
+	  * Instructs the slides motor to run to the target encoder position.
+	  * This uses the motor's internal PIDF loop.
+	  * @param position the target encoder position
+	  */
 	public void runToPosition(int position)
 	{
 		DcMotor.RunMode mode = motor.getMode();

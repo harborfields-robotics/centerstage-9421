@@ -10,6 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.lang.Math;
 
+/**
+  * The Drivetrain class handles the movement of a holonomic drivetrain, that is, one using four mecanum wheels.
+  * This inclueds odometry using dead wheels.
+  */
 public class Drivetrain
 {
 	public DcMotor motorFL, motorFR, motorBL, motorBR;
@@ -55,6 +59,13 @@ public class Drivetrain
 		// 	e.setMode(STOP_AND_RESET_ENCODER);
 	}
 
+	/**
+	  * Sets the target positions of the motors.
+	  * @param fl the target position for the front left motor
+	  * @param fr the target position for the front right motor
+	  * @param bl the target position for the back left motor
+	  * @param br the target position for the back right motor
+	  */
 	public void setMotorTargets(int fl, int fr, int bl, int br)
 	{
 		motorFL.setTargetPosition(fl);
@@ -75,12 +86,25 @@ public class Drivetrain
 		return powers;
 	}
 
+	/**
+	  * Sets the power of a motor smoothly over multiple calls to this method.
+	  * @param motor the motor whose power will be set
+	  * @param target the final motor power
+	  * @param delta the amount to accelerate by per call to this method
+	  */
 	public void setPowerSmooth(DcMotor motor, double target, double delta)
 	{
 		motor.setPower(motor.getPower() + delta * Math.signum(target - motor.getPower()));
 	}
 
-	public double[] computeMotorPowers(double deltaY, double deltaX, double deltaTheta)
+	/**
+	  * Returns the motor powers necessary to move in some direction.
+	  * @param deltaY the amount to move forward, a value in the range [-1, 1]
+	  * @param deltaX the amount to strafe right, a value in the range [-1, 1]
+	  * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
+	  * @return the motor powers in the order {FL, BL, BR, FR}
+	  */
+	public static double[] computeMotorPowers(double deltaY, double deltaX, double deltaTheta)
 	{
 		return new double[]{
 			Range.clip(deltaY + deltaX + deltaTheta, -1, 1),
@@ -90,6 +114,15 @@ public class Drivetrain
 		};
 	}
 
+	/**
+	  * Smoothly sets the motor powers in order to drive in the specified direction.
+	  * @param deltaY the amount to move forward, a value in the range [-1, 1]
+	  * @param deltaX the amount to strafe right, a value in the range [-1, 1]
+	  * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
+	  * @param power a value each motor's power is multiplied by
+	  * @param acceleration the amount to accelerate by per call to this method
+	  * @see #setPowerSmooth(DcMotor, double, double)
+	  */
 	public void driveLoopSmooth(double deltaY, double deltaX, double deltaTheta, double acceleration)
 	{
 		double powers[] = computeMotorPowers(deltaY, deltaX, deltaTheta);
@@ -97,6 +130,13 @@ public class Drivetrain
 			setPowerSmooth(motors.get(i), powers[i], acceleration);
 	}
 
+	/**
+	  * Sets the motor powers in order to drive in the specified direction with a specific maximum power.
+	  * @param deltaY the amount to move forward, a value in the range [-1, 1]
+	  * @param deltaX the amount to strafe right, a value in the range [-1, 1]
+	  * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
+	  * @param power a value each motor's power is multiplied by
+	  */
 	public void driveLoop(double deltaY, double deltaX, double deltaTheta)
 	{
 		double powers[] = computeMotorPowers(deltaY, deltaX, deltaTheta);
