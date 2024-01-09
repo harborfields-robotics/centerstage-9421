@@ -7,8 +7,8 @@ import java.util.stream.*;
 
 public class Slides
 {
-    private DcMotor motor;
-	private Servo wristServo, elbowServo;
+    public DcMotor motor;
+	public Servo wristServo, elbowServo;
 
 	public static final double
 		SPOOL_CIRCUMFERENCE = 112 / 25.4, // 112 mm

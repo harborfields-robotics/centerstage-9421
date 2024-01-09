@@ -18,7 +18,7 @@ public class Intake
 	{
 		this.teethMotor = hardware.get(DcMotor.class, Hardware.TEETH_MOTOR_NAME);
 		this.teethMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		// this.teethMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+		this.teethMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 		this.tongueServo = hardware.get(Servo.class, Hardware.TONGUE_SERVO_NAME);
 		this.tongueServo.setPosition(0.5);
 	}
@@ -32,7 +32,7 @@ public class Intake
 
 	public void intake()
 	{
-		state = State.OUTTAKING;
+		state = State.INTAKING;
 		tongueServo.setPosition(0);
 		teethMotor.setPower(-1);
 	}

@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.Intake;
 
 @TeleOp(name="One Controller OpMode", group="Linear OpMode")
 public class OneControllerTeleOp extends LinearOpMode
@@ -14,6 +16,9 @@ public class OneControllerTeleOp extends LinearOpMode
 		reverseControls = false;
 	private static Hardware hardware;
 
+	public Servo wristServo, elbowServo;
+
+	public DcMotor teethMotor;
 	public static final double TRIGGER_THRESHOLD = 0.3;
 
 	@Override
@@ -28,7 +33,26 @@ public class OneControllerTeleOp extends LinearOpMode
 
 		while (opModeIsActive()) {
 			telemetry.clear();
+			if(gamepad1.right_trigger > .1)
+				hardware.intake.intake();
+			else if(gamepad1.left_trigger > .1)
+				hardware.intake.outtake();
+			else
+				hardware.intake.stop();
+
+			telemetry.addData("Servo Position", hardware.slides.elbowServo.getPosition());
+			if (gamepad1.right_stick_y != 0)
+				hardware.slides.setPower(gamepad1.right_stick_y);
+			if (gamepad1.dpad_up)
+				new Thread(() -> hardware.slides.runToSetPosition(hardware.slides.getCurrentSetPositionIndex() + 1)).start();
+			else if (gamepad1.dpad_down)
+				new Thread(() -> hardware.slides.runToSetPosition(hardware.slides.getCurrentSetPositionIndex() - 1)).start();
+			telemetry.addData("Slides Position", hardware.slides.motor.getCurrentPosition());
+			telemetry.addData("Slides Set Position", hardware.slides.getCurrentSetPositionIndex());
+
 			telemetry.update();
+
+
 		}
 	}
 
