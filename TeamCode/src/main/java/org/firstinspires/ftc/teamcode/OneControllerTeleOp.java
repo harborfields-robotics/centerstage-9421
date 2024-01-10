@@ -27,7 +27,7 @@ public class OneControllerTeleOp extends OpMode
 	{
 		telemetry.clear();
 
-		boolean slowMode = gamepad1.right_trigger > TRIGGER_THRESHOLD;
+		boolean slowMode = gamepad1.left_trigger > TRIGGER_THRESHOLD;
 		hardware.drivetrain.driveLoop(
 				gamepad1.left_stick_y,
 				gamepad1.left_stick_x,
@@ -36,6 +36,18 @@ public class OneControllerTeleOp extends OpMode
 		hardware.slides.setPower(
 				Util.controllerValueWithDeadzone(
 					gamepad1.right_stick_y, 0.25));
+
+		if (gamepad1.right_trigger > TRIGGER_THRESHOLD)
+			hardware.intake.intake();
+		else if (gamepad1.circle)
+			hardware.intake.outtake();
+		else
+			hardware.intake.stop();
+
+		if (gamepad1.square)
+			hardware.intake.outtakeOne();
+
+		hardware.loop();
 
 		telemetry.update();
 	}
