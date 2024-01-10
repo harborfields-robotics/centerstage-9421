@@ -60,30 +60,22 @@ public class Drivetrain
 	}
 
 	/**
-	  * Sets the target positions of the motors.
-	  * @param fl the target position for the front left motor
-	  * @param fr the target position for the front right motor
-	  * @param bl the target position for the back left motor
-	  * @param br the target position for the back right motor
+	  * Returns a new array of motor powers, normalized to fall within the range [-1, 1].
+	  * Does this by dividing all powers by the element of largest absolute power.
+	  * This method does not modify the original array.
+	  * @param powers the unnormalized powers
+	  * @return those powers normalized to preserve ratio
 	  */
-	public void setMotorTargets(int fl, int fr, int bl, int br)
+	public static double[] normalizePowers(double[] powers)
 	{
-		motorFL.setTargetPosition(fl);
-		motorFR.setTargetPosition(fr);
-		motorBL.setTargetPosition(bl);
-		motorBR.setTargetPosition(br);
-	}
-
-	/* XXX: this method changes the order of the input array? */
-	public double[] normalizePowers(double[] powers) {
-		Arrays.sort(powers);
-		if (powers[3] > 1) {
-			powers[0] /= powers[3];
-			powers[1] /= powers[3];
-			powers[2] /= powers[3];
-			powers[3] /= powers[3];
-		}
-		return powers;
+		double[] normalized = new double[powers.length];
+		double max = 0;
+		for (double p: powers)
+			if (Math.abs(p) > max)
+				max = Math.abs(p);
+		for (int i = 0; i < normalized.length; i++)
+			normalized[i] = powers[i] / max;
+		return normalized;
 	}
 
 	/**
@@ -94,24 +86,29 @@ public class Drivetrain
 	  */
 	public void setPowerSmooth(DcMotor motor, double target, double delta)
 	{
-		motor.setPower(motor.getPower() + delta * Math.signum(target - motor.getPower()));
+		double power = motor.getPower();
+		if (Math.abs(power - target) < delta)
+			motor.setPower(target);
+		else
+			motor.setPower(power + delta * Math.signum(target - power));
 	}
 
 	/**
-	  * Returns the motor powers necessary to move in some direction.
-	  * @param deltaY the amount to move forward, a value in the range [-1, 1]
-	  * @param deltaX the amount to strafe right, a value in the range [-1, 1]
-	  * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
-	  * @return the motor powers in the order {FL, BL, BR, FR}
-	  */
+	 * Returns the motor powers necessary to move in some direction.
+	 * @param deltaY the amount to move forward, a value in the range [-1, 1]
+	 * @param deltaX the amount to strafe right, a value in the range [-1, 1]
+	 * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
+	 * @return the motor powers in the order {FL, BL, BR, FR}
+	 */
 	public static double[] computeMotorPowers(double deltaY, double deltaX, double deltaTheta)
 	{
-		return new double[]{
-			Range.clip(deltaY + deltaX + deltaTheta, -1, 1),
-			Range.clip(deltaY - deltaX + deltaTheta, -1, 1),
-			Range.clip(deltaY + deltaX - deltaTheta, -1, 1),
-			Range.clip(deltaY - deltaX - deltaTheta, -1, 1)
-		};
+		return normalizePowers(
+				new double[]{
+					deltaY + deltaX + deltaTheta,
+					deltaY - deltaX + deltaTheta,
+					deltaY + deltaX - deltaTheta,
+					deltaY - deltaX - deltaTheta,
+				});
 	}
 
 	/**
@@ -123,11 +120,11 @@ public class Drivetrain
 	  * @param acceleration the amount to accelerate by per call to this method
 	  * @see #setPowerSmooth(DcMotor, double, double)
 	  */
-	public void driveLoopSmooth(double deltaY, double deltaX, double deltaTheta, double acceleration)
+	public void driveLoopSmooth(double deltaY, double deltaX, double deltaTheta, double power, double acceleration)
 	{
 		double powers[] = computeMotorPowers(deltaY, deltaX, deltaTheta);
 		for (int i = 0; i < powers.length; i++)
-			setPowerSmooth(motors.get(i), powers[i], acceleration);
+			setPowerSmooth(motors.get(i), power * powers[i], acceleration);
 	}
 
 	/**
@@ -137,10 +134,10 @@ public class Drivetrain
 	  * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
 	  * @param power a value each motor's power is multiplied by
 	  */
-	public void driveLoop(double deltaY, double deltaX, double deltaTheta)
+	public void driveLoop(double deltaY, double deltaX, double deltaTheta, double power)
 	{
 		double powers[] = computeMotorPowers(deltaY, deltaX, deltaTheta);
 		for (int i = 0; i < powers.length; i++)
-			motors.get(i).setPower(powers[i]);
+			motors.get(i).setPower(power * powers[i]);
 	}
 }

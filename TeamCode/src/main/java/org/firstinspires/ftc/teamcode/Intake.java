@@ -20,9 +20,21 @@ public class Intake
 	/**
 	  * Represents all possible states of the intake.
 	  */
-	public static enum State { INTAKING, OUTTAKING, STOPPED }
+	public static enum State
+	{
+		INTAKING_CONTINUOUS,
+		OUTTAKING_CONTINUOUS,
+		OUTTAKING_ONE,
+		OUTTAKING_ALL,
+		STOPPED
+	}
 
 	private State state = State.STOPPED;
+
+	/** 
+	  * The time we began an operation, as returned by {@link System#nanoTime()}.
+	  */
+	private long startTime;
 
 	public Intake(Hardware hardware)
 	{
@@ -34,11 +46,30 @@ public class Intake
 	}
 
 	/**
+	  * Runs a single step of the processing loop.
+	  * Handles behavior and checks that should occur once per the main loop of the opmode.
+	  * @see Hardware#loop()
+	  */
+	public void loop()
+	{
+		switch (state) {
+			case OUTTAKING_ONE:
+				if (System.nanoTime() - startTime > OUTTAKE_ONE_DURATION_NS)
+					stop();
+				break;
+			case OUTTAKING_ALL:
+				if (System.nanoTime() - startTime > OUTTAKE_ONE_DURATION_NS * 2.5)
+					stop();
+				break;
+		}
+	}
+
+	/**
 	  * Continuously outtakes pixels.
 	  */
 	public void outtake()
 	{
-		state = State.OUTTAKING;
+		state = State.OUTTAKING_CONTINUOUS;
 		tongueServo.setPosition(1);
 		teethMotor.setPower(1);
 	}
@@ -48,7 +79,7 @@ public class Intake
 	  */
 	public void intake()
 	{
-		state = State.INTAKING;
+		state = State.INTAKING_CONTINUOUS;
 		tongueServo.setPosition(0);
 		teethMotor.setPower(-1);
 	}
@@ -58,7 +89,7 @@ public class Intake
 	  */
 	public void stop()
 	{
-		state = State.OUTTAKING;
+		state = State.STOPPED;
 		tongueServo.setPosition(0.5);
 		teethMotor.setPower(0);
 	}
@@ -69,31 +100,24 @@ public class Intake
 	}
 
 	/**
-	  * Outtakes one pixel from the sandwitch.
+	  * Outtakes one pixel from the sandwitch without blocking the thread.
 	  * @see #loop()
 	  */
 	public void outtakeOne()
 	{
-		long start = System.nanoTime();
+		long startTime = System.nanoTime();
 		outtake();
-		try {
-			while ((System.nanoTime() - start) < OUTTAKE_ONE_DURATION_NS)
-				Thread.sleep(50);
-		} catch (InterruptedException e) {}
-		stop();
+		state = State.OUTTAKING_ONE;
 	}
 
 	/**
-	  * Outtakes both pixels in the sandwitch.
+	  * Outtakes both pixels in the sandwitch without blocking the thread.
+	  * @see #loop()
 	  */
 	public void outtakeAll()
 	{
-		long start = System.nanoTime();
+		long startTime = System.nanoTime();
 		outtake();
-		try {
-			while ((System.nanoTime() - start) < OUTTAKE_ONE_DURATION_NS * 2.5)
-				Thread.sleep(50);
-		} catch (InterruptedException e) {}
-		stop();
+		state = State.OUTTAKING_ALL;
 	}
 }

@@ -43,17 +43,50 @@ public class Slides
 	  */
 	public static final int SET_POSITIONS[] = { MIN_POSITION, MAX_POSITION * 1/3, MAX_POSITION * 2/3, MAX_POSITION };
 
+	/**
+	  * Represents the possible states of the slides.
+	  */
+	public static enum State
+	{
+		STOPPED,
+		RUNNING_TO_POSITION,
+		RUNNING_CONTINUOUS
+	}
+
+	private State state = State.STOPPED;
+
     public Slides(Hardware hardware)
     {
         this.motor = hardware.get(DcMotor.class, Hardware.SLIDES_MOTOR_NAME);
 		this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		// XXX: does this reverse the encoder direction as well?
 		this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		this.wristServo = hardware.get(Servo.class, Hardware.WRIST_SERVO_NAME);
 		this.elbowServo = hardware.get(Servo.class, Hardware.ELBOW_SERVO_NAME);
     }
+
+	/**
+	  * The processing loop for the slides.
+	  * Handles behavior and checks that should occur once per frame.
+	  * @see Hardware@loop()
+	  */
+	public void loop()
+	{
+		switch (state) {
+			case RUNNING_TO_POSITION:
+				if (!motor.isBusy()) {
+					motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+					state = State.STOPPED;
+				}
+				break;
+			case RUNNING_CONTINUOUS:
+				if (!canMoveWithPower(motor.getPower()))
+					motor.setPower(0);
+				break;
+		}
+	}
 
 	/**
 	  * Sets the power of the slides motor, being careful not to exceed its limits.
@@ -63,11 +96,11 @@ public class Slides
 	  */
 	public void setPower(double power)
 	{
-		int position = motor.getCurrentPosition();
-		if (power > 0 && MAX_POSITION - position <= DEADZONE_SIZE)
+		if (state == State.RUNNING_TO_POSITION)
+			motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		if (!canMoveWithPower(power))
 			power = 0;
-		if (power < 0 && MIN_POSITION - position >= -DEADZONE_SIZE)
-			power = 0;
+		state = State.RUNNING_CONTINUOUS;
 		motor.setPower(power);
 	}
 
@@ -99,9 +132,23 @@ public class Slides
 	}
 
 	/**
-	  * Instructs the slides motor to run to the set position of the given index without blocking the current thread.
+	  * Returns whether the motor is allowed to move given a proposed power value (whether it will not move further into a deadzone)
+	  * @param power the current/new power of the motor
+	  * @return whether the motor can safely run using that power value
+	  */
+	public boolean canMoveWithPower(double power)
+	{
+		int position = motor.getCurrentPosition();
+		return !(power > 0 && MAX_POSITION - position <= DEADZONE_SIZE
+				|| power < 0 && MIN_POSITION - position >= -DEADZONE_SIZE);
+	}
+
+	/**
+	  * Instructs the slides motor to run to the set position of the given index without blockin the current thread.
 	  * The index is clamped to fall within the bounds of the array.
+	  * This relies on the processing loop being called frequently.
 	  * @param index the index of the target set position in {@link #SET_POSITIONS}
+	  * @see #loop()
 	  */
 	public void runToSetPosition(int index)
 	{
@@ -109,20 +156,17 @@ public class Slides
 	}
 
 	/**
-	  * Instructs the slides motor to run to the target encoder position.
+	  * Instructs the slides motor to run to the target encoder position without blocking the current thread.
 	  * This uses the motor's internal PIDF loop.
+	  * This relies on the processing loop being called frequently.
 	  * @param position the target encoder position
+	  * @see #loop()
 	  */
 	public void runToPosition(int position)
 	{
-		DcMotor.RunMode mode = motor.getMode();
 		motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		// XXX: This uses the motor's internal PID so we may have to tune it
 		motor.setTargetPosition(position);
-		try {
-			while (motor.isBusy())
-				Thread.sleep(50);
-		} catch (InterruptedException e) {}
-		motor.setMode(mode);
+		state = State.RUNNING_TO_POSITION;
 	}
 }

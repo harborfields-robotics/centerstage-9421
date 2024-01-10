@@ -73,6 +73,17 @@ public class Hardware
 	}
 
 	/**
+	  * Runs the processing loops for hardware components.
+	  * Processing loops handle behavior and checks that should occur frequently, ideally once per loop of the OpMode.
+	  */
+	public void loop()
+	{
+		intake.loop();
+		slides.loop();
+		launcher.loop();
+	}
+
+	/**
 	  * Initializes and returns a hardware object representing the named device.
 	  * @param type the type of the device
 	  * @param name the name of the device in the configuration
@@ -82,6 +93,18 @@ public class Hardware
 	public <T> T get(Class<? extends T> type, String name)
 	{
 		return hardwareMap.get(type, name);
+	}
+
+	/**
+	  * Initializes and returns a hardware object representing the named device, or null if the device does not exist.
+	  * @param type the type of the device
+	  * @param name the name of the device in the configuration
+	  * @return an object representing the device
+	  * @see com.qualcomm.robotcore.hardware.HardwareMap#tryGet(Class<? extends T>, String)
+	  */
+	public <T> T tryGet(Class<? extends T> type, String name)
+	{
+		return hardwareMap.tryGet(type, name);
 	}
 
 	/**
