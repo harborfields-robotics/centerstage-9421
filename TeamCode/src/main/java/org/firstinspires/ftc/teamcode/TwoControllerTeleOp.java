@@ -29,6 +29,8 @@ public class TwoControllerTeleOp extends OpMode
 	public final double TRIGGER_THRESHOLD = 0.1;
 	public final double SLOW_RATE = 0.25;
 
+	boolean toggle = false;
+
 	@Override
 	public void init()
 	{
@@ -49,7 +51,13 @@ public class TwoControllerTeleOp extends OpMode
 				slowMode ? SLOW_RATE : 1.0);
 
 		/* scoring (gamepad 2) */
-		hardware.slides.setPower(gamepad2.left_stick_y);
+		hardware.slides.setPower(-gamepad2.left_stick_y * 0.75);
+		if (gamepad2.circle)
+			toggle = !toggle;
+		if (toggle) {
+			hardware.slides.elbowServo.setPosition(gamepad2.right_stick_x);
+			hardware.slides.wristServo.setPosition(gamepad2.right_stick_y);
+		}
 		if (gamepad2.right_trigger > TRIGGER_THRESHOLD)
 			hardware.intake.intake();
 		else if (gamepad2.left_trigger > TRIGGER_THRESHOLD)
@@ -61,6 +69,11 @@ public class TwoControllerTeleOp extends OpMode
 			hardware.intake.outtakeOne();
 
 		hardware.loop();
+
+		telemetry.addData("Slides Position", hardware.slides.motor.getCurrentPosition());
+		telemetry.addData("Slides Set Position", hardware.slides.getCurrentSetPositionIndex());
+		telemetry.addData("Elbow Position", hardware.slides.elbowServo.getPosition());
+		telemetry.addData("Wrist Position", hardware.slides.wristServo.getPosition());
 
 		telemetry.update();
 	}

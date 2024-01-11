@@ -31,11 +31,9 @@ public class OneControllerTeleOp extends OpMode
 		hardware.drivetrain.driveLoop(
 				gamepad1.left_stick_y,
 				gamepad1.left_stick_x,
-				gamepad1.right_stick_x,
-				slowMode ? 1 : SLOW_RATE);
-		hardware.slides.setPower(
-				Util.controllerValueWithDeadzone(
-					gamepad1.right_stick_y, 0.25));
+				Util.controllerValueWithDeadzone(gamepad1.right_stick_x, 0.25),
+				slowMode ? SLOW_RATE : 1);
+		hardware.slides.setPower(-gamepad1.right_stick_y * 0.75);
 
 		if (gamepad1.right_trigger > TRIGGER_THRESHOLD)
 			hardware.intake.intake();
@@ -46,6 +44,9 @@ public class OneControllerTeleOp extends OpMode
 
 		if (gamepad1.square)
 			hardware.intake.outtakeOne();
+
+		if (gamepad1.triangle)
+			hardware.slides.setWristPosition(0.5);
 
 		hardware.loop();
 

@@ -70,7 +70,7 @@ public class Slides
 	/**
 	  * The processing loop for the slides.
 	  * Handles behavior and checks that should occur once per frame.
-	  * @see Hardware@loop()
+	  * @see Hardware#loop()
 	  */
 	public void loop()
 	{
@@ -115,6 +115,7 @@ public class Slides
 	/**
 	  * Returns the index of the set position closest to the slides' current height.
 	  * @return the index of this position in {@link #SET_POSITIONS}
+	  * @see #SET_POSITIONS
 	  */
 	public int getCurrentSetPositionIndex()
 	{
@@ -144,10 +145,11 @@ public class Slides
 	}
 
 	/**
-	  * Instructs the slides motor to run to the set position of the given index without blockin the current thread.
+	  * Instructs the slides motor to run to the set position of the given index without blocking the current thread.
 	  * The index is clamped to fall within the bounds of the array.
 	  * This relies on the processing loop being called frequently.
 	  * @param index the index of the target set position in {@link #SET_POSITIONS}
+	  * @see #SET_POSITIONS
 	  * @see #loop()
 	  */
 	public void runToSetPosition(int index)
@@ -168,5 +170,23 @@ public class Slides
 		// XXX: This uses the motor's internal PID so we may have to tune it
 		motor.setTargetPosition(position);
 		state = State.RUNNING_TO_POSITION;
+	}
+
+	/**
+	 * Instructs the wrist servo to move to the target position.
+	 * @param position the target position, a value in the range [0, 1]
+	 */
+	public void setWristPosition(double position)
+	{
+		wristServo.setPosition(position);
+	}
+
+	/**
+	 * Instructs the elbow servo to move to the target position.
+	 * @param position the target position, a value in the range [0, 1]
+	 */
+	public void setElbowPosition(double position)
+	{
+		elbowServo.setPosition(position);
 	}
 }

@@ -12,6 +12,7 @@ public class CVTestTeleOP extends LinearOpMode
 	{
 		hardware = new Hardware(hardwareMap, telemetry);
 
+		telemetry.setAutoClear(true);
 		hardware.doubleVision.putTelemetry();
 		waitForStart();
 
