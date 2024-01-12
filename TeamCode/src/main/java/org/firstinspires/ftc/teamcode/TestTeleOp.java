@@ -28,6 +28,10 @@ public class TestTeleOp extends LinearOpMode
 
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("FL", hardware.drivetrain.motorFL.getCurrentPosition());
+            telemetry.addData("BL", hardware.drivetrain.motorBL.getCurrentPosition());
+            telemetry.addData("BR", hardware.drivetrain.motorBR.getCurrentPosition());
+            telemetry.addData("FR", hardware.drivetrain.motorFR.getCurrentPosition());
             telemetry.update();
         }
     }

@@ -64,7 +64,7 @@ public class Hardware
 	{
 		this.hardwareMap = hardwareMap;
 		this.telemetry = telemetry;
-		this.telemetry.setAutoClear(false);
+		// this.telemetry.setAutoClear(false);
 		this.drivetrain = new Drivetrain(this);
 		this.doubleVision = new DoubleVision(this);
 		this.slides = new Slides(this);

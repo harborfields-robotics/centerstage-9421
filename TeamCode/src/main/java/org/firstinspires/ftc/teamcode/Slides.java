@@ -96,6 +96,7 @@ public class Slides
 	  */
 	public void setPower(double power)
 	{
+		power = -power;
 		if (state == State.RUNNING_TO_POSITION)
 			motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		if (!canMoveWithPower(power))

@@ -26,6 +26,7 @@ public class TwoControllerTeleOp extends OpMode
 {
 	private Hardware hardware;
 
+
 	public final double TRIGGER_THRESHOLD = 0.1;
 	public final double SLOW_RATE = 0.25;
 
@@ -52,12 +53,14 @@ public class TwoControllerTeleOp extends OpMode
 
 		/* scoring (gamepad 2) */
 		hardware.slides.setPower(-gamepad2.left_stick_y * 0.75);
-		if (gamepad2.circle)
-			toggle = !toggle;
-		if (toggle) {
-			hardware.slides.elbowServo.setPosition(gamepad2.right_stick_x);
-			hardware.slides.wristServo.setPosition(gamepad2.right_stick_y);
-		}
+		if(gamepad2.right_bumper)
+			hardware.slides.wristServo.setPosition(0.5);
+		if(gamepad2.cross)
+			hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() + .05);
+		if(gamepad2.triangle)
+			hardware.slides.elbowServo.setPosition(.75);
+		if(gamepad2.left_bumper)
+			hardware.slides.elbowServo.setPosition(1);
 		if (gamepad2.right_trigger > TRIGGER_THRESHOLD)
 			hardware.intake.intake();
 		else if (gamepad2.left_trigger > TRIGGER_THRESHOLD)

@@ -50,10 +50,10 @@ public class Drivetrain
 			m.setMode(RUN_WITHOUT_ENCODER);
 		}
 
-		motorFL.setDirection(DcMotor.Direction.REVERSE);
-		motorFR.setDirection(DcMotor.Direction.FORWARD);
-		motorBL.setDirection(DcMotor.Direction.REVERSE);
-		motorBR.setDirection(DcMotor.Direction.FORWARD);
+		motorFL.setDirection(DcMotor.Direction.FORWARD);
+		motorFR.setDirection(DcMotor.Direction.REVERSE);
+		motorBL.setDirection(DcMotor.Direction.FORWARD);
+		motorBR.setDirection(DcMotor.Direction.REVERSE);
 
 		// for (DcMotor e: encoders)
 		// 	e.setMode(STOP_AND_RESET_ENCODER);
@@ -104,10 +104,10 @@ public class Drivetrain
 	{
 		return normalizePowers(
 				new double[]{
-					deltaY + deltaX + deltaTheta,
 					deltaY - deltaX + deltaTheta,
-					deltaY + deltaX - deltaTheta,
+					deltaY + deltaX + deltaTheta,
 					deltaY - deltaX - deltaTheta,
+					deltaY + deltaX - deltaTheta,
 				});
 	}
 
