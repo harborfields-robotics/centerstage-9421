@@ -13,6 +13,9 @@ public class Slides
     public DcMotor motor;
 	public Servo wristServo, elbowServo;
 
+	public static final double WRIST_REST_POSITION = 0;
+	public static final double ELBOW_REST_POSITION = 0;
+
 	/**
 	  * The circumference of the slides' spool, in inches.
 	  */
