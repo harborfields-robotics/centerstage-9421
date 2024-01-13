@@ -111,13 +111,11 @@ public class Hardware
 	  * Resets the encoder value to zero and returns the motor to its previous state.
 	  * @param motor the motor to operate on
 	  */
-	public static void resetEncoder(DcMotor motor)
-	{
+	public static void resetEncoder(DcMotor motor) {
 		DcMotor.RunMode mode = motor.getMode();
 		motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor.setMode(mode);
 	}
-
 	/**
 	  * Returns the name of a hardware device as it appears in the configuration.
 	  * @param device an object representing the hardware device

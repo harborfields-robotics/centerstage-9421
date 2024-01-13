@@ -131,7 +131,7 @@ public class Drivetrain
 	  * Sets the motor powers in order to drive in the specified direction with a specific maximum power.
 	  * @param deltaY the amount to move forward, a value in the range [-1, 1]
 	  * @param deltaX the amount to strafe right, a value in the range [-1, 1]
-	  * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
+	   @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
 	  * @param power a value each motor's power is multiplied by
 	  */
 	public void driveLoop(double deltaY, double deltaX, double deltaTheta, double power)
