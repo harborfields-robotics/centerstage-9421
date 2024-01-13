@@ -54,7 +54,7 @@ public class TwoControllerTeleOp extends OpMode
 		/* scoring (gamepad 2) */
 		hardware.slides.setPower(-gamepad2.left_stick_y * 0.75);
 		if(gamepad2.triangle)
-			hardware.slides.wristServo.setPosition(0.45);
+			hardware.slides.wristServo.setPosition(0.4);
 		if(gamepad2.cross)
 			hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() + .05);
 		if(gamepad2.square)
