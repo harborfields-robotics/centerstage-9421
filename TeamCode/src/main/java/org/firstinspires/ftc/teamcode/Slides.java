@@ -43,14 +43,13 @@ public class Slides
 	  */
 	public static final int SET_POSITIONS[] = { MIN_POSITION, MAX_POSITION * 1/3, MAX_POSITION * 2/3, MAX_POSITION };
 
-	/* FIXME: these numbers aren't real */
-	public static final double ELBOW_REST_POSITION = 0;
-	public static final double ELBOW_OUT_POSITION = 0.5;
-	public static final double ELBOW_DROP_POSITION = 1;
+	public static final double ELBOW_REST_POSITION = 0.50;
+	public static final double ELBOW_OUT_POSITION = 0.75;
+	public static final double ELBOW_DROP_POSITION = 0.2;
 
-	public static final double WRIST_DROP_POSITION = 0;
-	public static final double WRIST_REST_POSITION = 0.5;
-	public static final double WRIST_GRAB_POSITION = 1;
+	public static final double WRIST_DROP_POSITION = 0.45;
+	public static final double WRIST_REST_POSITION = 0.72;
+	public static final double WRIST_GRAB_POSITION = 0.62;
 
 	/**
 	  * Represents the possible states of the slides.

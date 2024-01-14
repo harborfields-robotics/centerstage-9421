@@ -9,29 +9,41 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="Testing OpMode", group="Testing OpMode")
-public class TestTeleOp extends LinearOpMode
-{
-    private DcMotor motor;
+public class TestTeleOp extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
-	private Hardware hardware;
+    private Hardware hardware;
 
     @Override
-    public void runOpMode()
-    {
+    public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-		hardware = new Hardware(hardwareMap, telemetry);
+        hardware = new Hardware(hardwareMap, telemetry);
 
         waitForStart();
         runtime.reset();
+        boolean started = false;
 
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("FL", hardware.drivetrain.motorFL.getCurrentPosition());
-            telemetry.addData("BL", hardware.drivetrain.motorBL.getCurrentPosition());
-            telemetry.addData("BR", hardware.drivetrain.motorBR.getCurrentPosition());
-            telemetry.addData("FR", hardware.drivetrain.motorFR.getCurrentPosition());
+            hardware.slides.setPower(gamepad1.right_stick_y);
+            if (gamepad1.circle && !started) {
+                started = true;
+                hardware.slides.wristServo.setPosition(0);
+                hardware.slides.elbowServo.setPosition(0);
+            }
+            if (started) {
+                if (gamepad1.dpad_up)
+                    hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() + 0.005);
+                if (gamepad1.dpad_down)
+                    hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() - 0.005);
+                if (gamepad1.dpad_left)
+                    hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() + 0.005);
+                if (gamepad1.dpad_right)
+                    hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() - 0.005);
+            }
+            telemetry.addData("wrist", hardware.slides.wristServo.getPosition());
+            telemetry.addData("elbow", hardware.slides.elbowServo.getPosition());
+            telemetry.addData("slides", hardware.slides.motor.getCurrentPosition());
             telemetry.update();
         }
     }

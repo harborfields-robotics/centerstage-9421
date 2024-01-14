@@ -105,10 +105,10 @@ public class Drivetrain
 	{
 		return normalizePowers(
 				new double[]{
-					deltaY - deltaX + deltaTheta,
-					deltaY + deltaX + deltaTheta,
 					deltaY - deltaX - deltaTheta,
 					deltaY + deltaX - deltaTheta,
+					deltaY - deltaX + deltaTheta,
+					deltaY + deltaX + deltaTheta,
 				});
 	}
 

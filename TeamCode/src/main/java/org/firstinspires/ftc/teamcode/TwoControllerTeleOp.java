@@ -60,7 +60,7 @@ public class TwoControllerTeleOp extends OpMode
 			hardware.launcher.launch();
 
 		/* scoring (gamepad 2) */
-		hardware.slides.setPower(-gamepad2.left_stick_y * 0.75);
+		hardware.slides.setPower(gamepad2.left_stick_y * 0.75);
 
 		if (gamepad2.right_trigger > TRIGGER_THRESHOLD)
 			hardware.intake.intake();
@@ -82,6 +82,15 @@ public class TwoControllerTeleOp extends OpMode
 			hardware.slides.elbowServo.setPosition(Slides.ELBOW_OUT_POSITION);
 		if (gamepad2.circle)
 			hardware.slides.wristServo.setPosition(Slides.WRIST_REST_POSITION);
+
+		if (gamepad2.dpad_up)
+			hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() + 0.005);
+		if (gamepad2.dpad_down)
+			hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() - 0.005);
+		if (gamepad2.dpad_left)
+			hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() + 0.005);
+		if (gamepad2.dpad_right)
+			hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() - 0.005);
 
 		hardware.loop();
 

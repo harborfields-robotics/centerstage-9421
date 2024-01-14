@@ -31,8 +31,6 @@ public class Launcher {
 	 */
 	public boolean launch()
 	{
-		if (hasLaunched)
-			return false;
-		return true;
+		servo.setPosition(1);
 	}
 }
