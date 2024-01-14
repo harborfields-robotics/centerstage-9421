@@ -42,8 +42,8 @@ public class Hardware
 		FR_MOTOR_NAME       = "fr-motor",      /* control hub port 3   */
 
 		// They're really more like lips to be honest but they _look_ like teeth
-		TEETH_MOTOR_NAME    = "teeth-motor",  /* expansion hub port 1 */
-		TONGUE_SERVO_NAME   = "tongue-servo",   /* expansion hub port 0 */
+		TEETH_MOTOR_NAME    = "teeth-motor",   /* expansion hub port 1 */
+		TONGUE_SERVO_NAME   = "tongue-servo",  /* expansion hub port 0 */
 
 		// I guess his mouth is on his hand
 		SLIDES_MOTOR_NAME   = "slides-motor",  /* expansion hub port 0 */
