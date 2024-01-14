@@ -19,6 +19,7 @@ public class Auto extends OpMode
 	public void init()
 	{
 		hardware = new Hardware(hardwareMap, telemetry);
+		// hi :)
 		motorFR = hardwareMap.dcMotor.get("fr-motor");
 		motorFL = hardwareMap.dcMotor.get("fl-motor");
 		motorBR = hardwareMap.dcMotor.get("br-motor");
