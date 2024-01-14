@@ -29,9 +29,9 @@ public class Auto extends OpMode
 	public void loop()
 	{
 		DriveRight(1);
-		sleep(2000);
+		Util.sleep(2000);
 		Stop();
-		sleep(2000);
+		Util.sleep(2000);
 	}
 
 	public void DriveRight(double power)

@@ -36,4 +36,19 @@ public final class Util
 			return 0;
 		return (value - size * Math.signum(value)) / (1 - size);
 	}
+
+	/**
+	  * Sleeps for the specified length of time. If an InterruptedException occurs, no error is thrown.
+	  * @param millis the length of the delay in milliseconds
+	  * @return true if the thread was not interrupted, false otherwise
+	  */
+	public static boolean sleep(long millis)
+	{
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			return false;
+		}
+		return true;
+	}
 }
