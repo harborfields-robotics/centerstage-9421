@@ -70,6 +70,7 @@ public class TwoControllerTeleOp extends OpMode
 
 		if (gamepad2.square)
 			hardware.intake.outtakeOne();
+		if(gamepad2.)
 
 		hardware.loop();
 
