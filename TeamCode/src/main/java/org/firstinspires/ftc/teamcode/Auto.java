@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="Auto", group="Linear OpMode")
-public class Auto extends LinearOpMode
+@Autonomous(name="Auto", group="OpMode")
+public class Auto extends OpMode
 {
 	Hardware hardware;
 	DcMotor motorFR;
@@ -16,20 +16,21 @@ public class Auto extends LinearOpMode
 	DcMotor motorBR;
 	DcMotor motorBL;
 
-	@Override
-	public void runOpMode() throws InterruptedException {
-		waitForStart();
+	public void init()
+	{
 		hardware = new Hardware(hardwareMap, telemetry);
 		motorFR = hardwareMap.dcMotor.get("fr-motor");
 		motorFL = hardwareMap.dcMotor.get("fl-motor");
 		motorBR = hardwareMap.dcMotor.get("br-motor");
 		motorBL = hardwareMap.dcMotor.get("bl-motor");
-		//waitForStart();
-		while (opModeIsActive()) {
-			DriveRight(1);
-			sleep(2000);
-			Stop();
-		}
+	}
+
+	public void loop()
+	{
+		DriveRight(1);
+		sleep(2000);
+		Stop();
+		sleep(2000);
 	}
 
 	public void DriveRight(double power)
