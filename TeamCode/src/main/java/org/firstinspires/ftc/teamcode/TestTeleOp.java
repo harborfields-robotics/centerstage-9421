@@ -26,13 +26,19 @@ public class TestTeleOp extends LinearOpMode
         waitForStart();
         runtime.reset();
 
+		boolean enabled = false;
+
         while (opModeIsActive()) {
+
+			if (enabled) {
+
+			}
+
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("FL", hardware.drivetrain.motorFL.getCurrentPosition());
-            telemetry.addData("BL", hardware.drivetrain.motorBL.getCurrentPosition());
-            telemetry.addData("BR", hardware.drivetrain.motorBR.getCurrentPosition());
-            telemetry.addData("FR", hardware.drivetrain.motorFR.getCurrentPosition());
-            telemetry.update();
+            telemetry.addData("slides", hardware.slides.motor.getCurrentPosition());
+            telemetry.addData("wrist", hardware.slides.wristServo.getPosition());
+            telemetry.addData("elbow", hardware.slides.elbowServo.getPosition());
+			telemetry.update();
         }
     }
 }

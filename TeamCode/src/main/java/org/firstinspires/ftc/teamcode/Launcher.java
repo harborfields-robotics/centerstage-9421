@@ -7,71 +7,42 @@ import com.qualcomm.robotcore.hardware.*;
   */
 public class Launcher
 {
-	public DcMotor motor;
+	public Servo servo;
 	private Hardware hardware;
 
 	/**
-	  * The motor power to be used for launching.
+	  * Whether the airplane has been launched already.
 	  */
-	public static final double LAUNCH_POWER = 1.0;
+	private boolean launched = false;
 
 	/**
-	  * The amount of time to run the motor, in milliseconds.
+	  * The position of the servo needed to release the airplane.
 	  */
-	public static final long LAUNCH_MS = 3 * 1000;
+	public static final double RELEASE_POSITION = 1;
 
 	/**
-	  * Whether the airplane is currently being launched.
+	  * The position of the servo before the airplane has been launched.
 	  */
-	private boolean launching = false;
-
-	/** 
-	  * The time we began launching the airplaine, as returned by {@link System#nanoTime()}.
-	  */
-	private long startTime;
+	public static final double PRIMED_POSITION = 0;
 
 	public Launcher(Hardware hardware)
 	{
 		this.hardware = hardware;
-		this.motor = hardware.get(DcMotor.class, Hardware.LAUNCHER_MOTOR_NAME);
+		this.servo = hardware.get(Servo.class, Hardware.LAUNCHER_MOTOR_NAME);
+		this.servo.setPosition(PRIMED_POSITION);
 	}
 
 	/**
-	  * Runs a single step of the processing loop.
-	  * Handles behavior and checks that should occur once per the main loop of the opmode.
-	  * @see Hardware#loop()
+	  * Launches the paper airplane by releasing the slingshot.
+	  * The launch will fail if the airplane has already been launched.
+	  * @return if the launch could be completed
 	  */
-	public void loop()
+	public boolean launch()
 	{
-		if (launching) {
-			if (System.nanoTime() - startTime > LAUNCH_MS * 1e6) {
-				motor.setPower(0);
-				launching = false;
-			}
-		}
-	}
-
-	/**
-	  * Launches the paper airplane without blocking the current thread.
-	  * This method requires {@link #loop()} to be called repeatedly in order to complete.
-	  * @see #loop()
-	  * @see #launchBlocking()
-	  */
-	public void launch()
-	{
-		motor.setPower(LAUNCH_POWER);
-		launching = true;
-	}
-
-	/**
-	  * Launches the paper airplane, blocking the thread until finished.
-	  * @see #launch()
-	  */ 
-	public void launchBlocking() throws InterruptedException
-	{
-		launch();
-		Thread.sleep(LAUNCH_MS);
-		motor.setPower(0);
-		launching = false;
+		if (launched)
+			return false;
+		servo.setPosition(RELEASE_POSITION);
+		launched = true;
+		return true;
 	}
 }
