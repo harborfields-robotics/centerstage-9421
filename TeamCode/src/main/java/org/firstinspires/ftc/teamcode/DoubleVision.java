@@ -50,7 +50,7 @@ public class DoubleVision
 	public DoubleVision(Hardware hardware)
 	{
 		this.hardware = hardware;
-        this.webcam = hardware.hardwareMap.tryGet(WebcamName.class, Hardware.WEBCAM_NAME);
+        this.webcam = hardware.tryGet(WebcamName.class, Hardware.WEBCAM_NAME);
 		this.aprilTag = new AprilTagProcessor.Builder().build();
 		this.tfod = new TfodProcessor.Builder()
 			.setModelFileName(TFOD_MODEL_PATH)

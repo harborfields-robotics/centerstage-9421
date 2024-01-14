@@ -13,9 +13,6 @@ public class Slides
     public DcMotor motor;
 	public Servo wristServo, elbowServo;
 
-	public static final double WRIST_REST_POSITION = 0;
-	public static final double ELBOW_REST_POSITION = 0;
-
 	/**
 	  * The circumference of the slides' spool, in inches.
 	  */
@@ -45,6 +42,15 @@ public class Slides
 	  * @see #runToSetPosition(int)
 	  */
 	public static final int SET_POSITIONS[] = { MIN_POSITION, MAX_POSITION * 1/3, MAX_POSITION * 2/3, MAX_POSITION };
+
+	/* FIXME: these numbers aren't real */
+	public static final double ELBOW_REST_POSITION = 0;
+	public static final double ELBOW_OUT_POSITION = 0.5;
+	public static final double ELBOW_DROP_POSITION = 1;
+
+	public static final double WRIST_DROP_POSITION = 0;
+	public static final double WRIST_REST_POSITION = 0.5;
+	public static final double WRIST_GRAB_POSITION = 1;
 
 	/**
 	  * Represents the possible states of the slides.

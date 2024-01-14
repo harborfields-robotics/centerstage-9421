@@ -14,11 +14,17 @@ import com.qualcomm.robotcore.util.Range;
 		* right stick y - forward/backward
 		* left stick x - rotation
 		* left trigger - slow mode (hold)
+		* ? - release launcher servo
 	Gamepad 2 (Scoring):
 		* left stick y - slides
-		* right trigger - intake
-		* left trigger - outtake
-		* square - outtake one pixel
+		* right trigger - intake continuous
+		* left trigger - outtake continuous
+		* right bumper - elbow return position
+		* left bumper - elbow drop position
+		* cross - wrist drop position
+		* circle - wrist in drive position
+		* square - wrist in grab position
+		* triangle - elbow out position
    */
 
 @TeleOp(name="Two Controller OpMode", group="OpMode")
@@ -53,14 +59,7 @@ public class TwoControllerTeleOp extends OpMode
 
 		/* scoring (gamepad 2) */
 		hardware.slides.setPower(-gamepad2.left_stick_y * 0.75);
-		if (gamepad2.right_bumper)
-			hardware.slides.wristServo.setPosition(0.5);
-		if (gamepad2.cross)
-			hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() + .05);
-		if (gamepad2.triangle)
-			hardware.slides.elbowServo.setPosition(.75);
-		if (gamepad2.left_bumper)
-			hardware.slides.elbowServo.setPosition(1);
+
 		if (gamepad2.right_trigger > TRIGGER_THRESHOLD)
 			hardware.intake.intake();
 		else if (gamepad2.left_trigger > TRIGGER_THRESHOLD)
@@ -68,8 +67,19 @@ public class TwoControllerTeleOp extends OpMode
 		else
 			hardware.intake.stop();
 
+		if (gamepad2.right_bumper)
+			hardware.slides.elbowServo.setPosition(Slides.ELBOW_REST_POSITION);
+		if (gamepad2.left_bumper)
+			hardware.slides.elbowServo.setPosition(Slides.ELBOW_DROP_POSITION);
+
+		if (gamepad2.cross)
+			hardware.slides.wristServo.setPosition(Slides.WRIST_DROP_POSITION);
 		if (gamepad2.square)
-			hardware.intake.outtakeOne();
+			hardware.slides.wristServo.setPosition(Slides.WRIST_GRAB_POSITION);
+		if (gamepad2.triangle)
+			hardware.slides.elbowServo.setPosition(Slides.ELBOW_OUT_POSITION);
+		if (gamepad2.circle)
+			hardware.slides.wristServo.setPosition(Slides.WRIST_REST_POSITION);
 
 		hardware.loop();
 
