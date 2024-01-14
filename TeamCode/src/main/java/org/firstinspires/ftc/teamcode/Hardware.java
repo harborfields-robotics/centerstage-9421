@@ -34,7 +34,7 @@ public class Hardware
 
 	// TODO: update configuration names
 	public static final String
-		WEBCAM_NAME         = "webcam",        /* USB port             */
+		WEBCAM_NAME         = "Webcam 1",      /* USB port             */
 
 		FL_MOTOR_NAME       = "fl-motor",      /* control hub port 0   */
 		BL_MOTOR_NAME       = "bl-motor",      /* control hub port 1   */
@@ -55,7 +55,7 @@ public class Hardware
 		BACK_ENCODER_NAME   = "back-encoder",  /* expansion hub port 2 */
 		RIGHT_ENCODER_NAME  = "right-encoder", /* expansion hub port 3 */
 
-		LAUNCHER_MOTOR_NAME = "launcher-motor"; /* expansion hub port 2 */
+		LAUNCHER_SERVO_NAME = "launcher-motor"; /* expansion hub port 2 */
 
 	/**
 	  * Creates a hardware object and initializes all hardware components.
@@ -80,7 +80,6 @@ public class Hardware
 	{
 		intake.loop();
 		slides.loop();
-		launcher.loop();
 	}
 
 	/**

@@ -34,6 +34,7 @@ public class OneControllerTeleOp extends OpMode
 				gamepad1.right_stick_x,
 				//Util.controllerValueWithDeadzone(gamepad1.right_stick_x, 0.25),
 				slowMode ? SLOW_RATE : 1);
+
 		hardware.slides.setPower(gamepad1.dpad_up ? 0.75 : (gamepad1.dpad_down ? -0.75 : 0));
 
 		if (gamepad1.right_trigger > TRIGGER_THRESHOLD)
@@ -51,6 +52,8 @@ public class OneControllerTeleOp extends OpMode
 
 		telemetry.addData("slides", hardware.slides.motor.getCurrentPosition());
 		telemetry.addData("slides set position", hardware.slides.getCurrentSetPositionIndex());
+		telemetry.addData("elbow", hardware.slides.elbowServo.getPosition());
+		telemetry.addData("wrist", hardware.slides.elbowServo.getPosition());
 		hardware.loop();
 
 		telemetry.update();

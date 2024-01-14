@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,10 +17,10 @@ import java.lang.Math;
   */
 public class Drivetrain
 {
-	public DcMotor motorFL, motorFR, motorBL, motorBR;
+	public DcMotorEx motorFL, motorFR, motorBL, motorBR;
 	public DcMotor encoderLeft, encoderBack, encoderRight;
-	public List<DcMotor> motors;
-	public List<DcMotor> encoders;
+	public List<DcMotorEx> motors;
+	public List<DcMotorEx> encoders;
 	public Hardware hardware;
 
 	public static final double
@@ -32,10 +33,10 @@ public class Drivetrain
 	{
 		this.hardware = hardware;
 
-		this.motorFL = hardware.get(DcMotor.class, Hardware.FL_MOTOR_NAME);
-		this.motorBL = hardware.get(DcMotor.class, Hardware.BL_MOTOR_NAME);
-		this.motorBR = hardware.get(DcMotor.class, Hardware.BR_MOTOR_NAME);
-		this.motorFR = hardware.get(DcMotor.class, Hardware.FR_MOTOR_NAME);
+		this.motorFL = hardware.get(DcMotorEx.class, Hardware.FL_MOTOR_NAME);
+		this.motorBL = hardware.get(DcMotorEx.class, Hardware.BL_MOTOR_NAME);
+		this.motorBR = hardware.get(DcMotorEx.class, Hardware.BR_MOTOR_NAME);
+		this.motorFR = hardware.get(DcMotorEx.class, Hardware.FR_MOTOR_NAME);
 		this.motors = Arrays.asList(motorFL, motorBL, motorBR, motorFR);
 
 		// this.encoderLeft = hardware.get(DcMotor.class, Hardware.LEFT_ENCODER_NAME);

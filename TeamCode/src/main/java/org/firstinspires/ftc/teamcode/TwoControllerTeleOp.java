@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 		* right stick y - forward/backward
 		* left stick x - rotation
 		* left trigger - slow mode (hold)
-		* ? - release launcher servo
+		* dpad up - release launcher servo
 	Gamepad 2 (Scoring):
 		* left stick y - slides
 		* right trigger - intake continuous
@@ -56,6 +56,8 @@ public class TwoControllerTeleOp extends OpMode
 				gamepad1.left_stick_x,
 				gamepad1.right_stick_x,
 				slowMode ? SLOW_RATE : 1.0);
+		if (gamepad1.dpad_up)
+			hardware.launcher.launch();
 
 		/* scoring (gamepad 2) */
 		hardware.slides.setPower(-gamepad2.left_stick_y * 0.75);
