@@ -7,9 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+
 import java.util.Arrays;
 import java.util.List;
 import java.lang.Math;
+import java.util.stream.IntStream;
 
 /**
   * The Drivetrain class handles the movement of a holonomic drivetrain, that is, one using four mecanum wheels.
@@ -20,8 +23,22 @@ public class Drivetrain
 	public DcMotorEx motorFL, motorFR, motorBL, motorBR;
 	public DcMotor encoderLeft, encoderBack, encoderRight;
 	public List<DcMotorEx> motors;
+	public static final String[] MOTOR_NAMES = { "FL", "BL", "BR", "FR" };
 	public List<DcMotorEx> encoders;
 	public Hardware hardware;
+
+	public static class Heading
+	{
+		public double x, y, theta;
+		public Heading(double x, double y, double theta)
+		{
+			this.x = x;
+			this.y = y;
+			this.theta = theta;
+		}
+
+		public Heading() { this(0, 0, 0); }
+	}
 
 	public static final double
 		TICKS_PER_TILE = 620,
@@ -48,7 +65,8 @@ public class Drivetrain
 			m.setPower(0);
 			m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 			m.setMode(STOP_AND_RESET_ENCODER);
-			m.setMode(RUN_WITHOUT_ENCODER);
+			//m.setMode(RUN_WITHOUT_ENCODER);
+			m.setMode(RUN_USING_ENCODER);
 		}
 
 		motorFL.setDirection(DcMotor.Direction.FORWARD);
@@ -140,5 +158,39 @@ public class Drivetrain
 		double powers[] = computeMotorPowers(deltaY, deltaX, deltaTheta);
 		for (int i = 0; i < powers.length; i++)
 			motors.get(i).setPower(power * powers[i]);
+	}
+
+	public void stop()
+	{
+		for (DcMotor m: motors)
+			m.setPower(0);
+	}
+
+	public int[] calculateHeadingTargets(Heading heading)
+	{
+		int[] targets = new int[4];
+		double dy = heading.x / (DriveConstants.WHEEL_RADIUS * Math.PI * 2) * DriveConstants.TICKS_PER_REV;
+		for (int i = 0; i < targets.length; i++)
+			targets[i] += dy;
+		return targets;
+	}
+
+	public void followHeading(Heading heading)
+	{
+		int[] targets = calculateHeadingTargets(heading);
+		DcMotor.RunMode[] modes = motors.stream()
+				.map(DcMotor::getMode)
+				.toArray(DcMotor.RunMode[]::new);
+		for (int i = 0; i < targets.length; i++)
+			motors.get(i).setTargetPosition(targets[i]);
+		for (int i = 0; i < motors.size(); i++)
+			motors.get(i).setMode(modes[i]);
+	}
+
+	public void telemetrize()
+	{
+		for (DcMotor m: motors)
+			hardware.telemetry.addData(hardware.getDeviceName(m),
+					"%d ticks, %.2f pwr", m.getCurrentPosition(), m.getPower());
 	}
 }

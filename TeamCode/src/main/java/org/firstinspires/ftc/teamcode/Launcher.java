@@ -29,7 +29,7 @@ public class Launcher {
 	 *
 	 * @return whether the launch was successful
 	 */
-	public boolean launch()
+	public void launch()
 	{
 		servo.setPosition(1);
 	}

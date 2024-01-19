@@ -50,11 +50,9 @@ public class OneControllerTeleOp extends OpMode
 		if (gamepad1.triangle)
 			hardware.slides.setWristPosition(0.5);
 
-		telemetry.addData("slides", hardware.slides.motor.getCurrentPosition());
-		telemetry.addData("slides set position", hardware.slides.getCurrentSetPositionIndex());
-		telemetry.addData("elbow", hardware.slides.elbowServo.getPosition());
-		telemetry.addData("wrist", hardware.slides.elbowServo.getPosition());
 		hardware.loop();
+
+		hardware.drivetrain.telemetrize();
 
 		telemetry.update();
 	}

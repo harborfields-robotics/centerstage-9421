@@ -31,11 +31,8 @@ import com.qualcomm.robotcore.util.Range;
 public class TwoControllerTeleOp extends OpMode
 {
 	private Hardware hardware;
-
-
 	public final double TRIGGER_THRESHOLD = 0.1;
-	public final double SLOW_RATE = 0.25;
-
+	public final double SLOW_RATE = 0.40;
 	boolean toggle = false;
 
 	@Override
@@ -76,10 +73,10 @@ public class TwoControllerTeleOp extends OpMode
 
 		if (gamepad2.cross)
 			hardware.slides.wristServo.setPosition(Slides.WRIST_DROP_POSITION);
-		if (gamepad2.square)
+		if (gamepad2.square) {
 			hardware.slides.wristServo.setPosition(Slides.WRIST_GRAB_POSITION);
-		if (gamepad2.triangle)
 			hardware.slides.elbowServo.setPosition(Slides.ELBOW_OUT_POSITION);
+		}
 		if (gamepad2.circle)
 			hardware.slides.wristServo.setPosition(Slides.WRIST_REST_POSITION);
 
