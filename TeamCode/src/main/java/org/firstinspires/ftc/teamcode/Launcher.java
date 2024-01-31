@@ -25,12 +25,16 @@ public class Launcher {
 
 	/**
 	 * Launches the paper airplane by releasing the rubber band.
-	 * The launch will fail if the airplane was already launched
-	 *
-	 * @return whether the launch was successful
 	 */
-	public void launch()
-	{
+	public void launch() {
 		servo.setPosition(1);
+	}
+
+	/**
+	 * Returns the launcher to the state before launching.
+	 */
+	public void unlaunch()
+	{
+		servo.setPosition(0.40);
 	}
 }

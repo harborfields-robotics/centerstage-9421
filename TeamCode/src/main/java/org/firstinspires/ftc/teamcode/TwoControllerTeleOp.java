@@ -55,6 +55,8 @@ public class TwoControllerTeleOp extends OpMode
 				slowMode ? SLOW_RATE : 1.0);
 		if (gamepad1.dpad_up)
 			hardware.launcher.launch();
+		if (gamepad1.dpad_down)
+			hardware.launcher.unlaunch();
 
 		/* scoring (gamepad 2) */
 		hardware.slides.setPower(gamepad2.left_stick_y * 0.75);
@@ -66,35 +68,35 @@ public class TwoControllerTeleOp extends OpMode
 		else
 			hardware.intake.stop();
 
-		if (gamepad2.right_bumper)
-			hardware.slides.elbowServo.setPosition(Slides.ELBOW_REST_POSITION);
-		if (gamepad2.left_bumper)
-			hardware.slides.elbowServo.setPosition(Slides.ELBOW_DROP_POSITION);
+		// if (gamepad2.right_bumper)
+		// 	hardware.slides.elbowServo.setPosition(Slides.ELBOW_REST_POSITION);
+		// if (gamepad2.left_bumper)
+		// 	hardware.slides.elbowServo.setPosition(Slides.ELBOW_DROP_POSITION);
 
-		if (gamepad2.cross)
-			hardware.slides.wristServo.setPosition(Slides.WRIST_DROP_POSITION);
-		if (gamepad2.square) {
-			hardware.slides.wristServo.setPosition(Slides.WRIST_GRAB_POSITION);
-			hardware.slides.elbowServo.setPosition(Slides.ELBOW_OUT_POSITION);
-		}
-		if (gamepad2.circle)
-			hardware.slides.wristServo.setPosition(Slides.WRIST_REST_POSITION);
+		// if (gamepad2.cross)
+		// 	hardware.slides.wristServo.setPosition(Slides.WRIST_DROP_POSITION);
+		// if (gamepad2.square) {
+		// 	hardware.slides.wristServo.setPosition(Slides.WRIST_GRAB_POSITION);
+		// 	hardware.slides.elbowServo.setPosition(Slides.ELBOW_OUT_POSITION);
+		// }
+		// if (gamepad2.circle)
+		// 	hardware.slides.wristServo.setPosition(Slides.WRIST_REST_POSITION);
 
-		if (gamepad2.dpad_up)
-			hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() + 0.005);
-		if (gamepad2.dpad_down)
-			hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() - 0.005);
-		if (gamepad2.dpad_left)
-			hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() + 0.005);
-		if (gamepad2.dpad_right)
-			hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() - 0.005);
+		// if (gamepad2.dpad_up)
+		// 	hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() + 0.005);
+		// if (gamepad2.dpad_down)
+		// 	hardware.slides.wristServo.setPosition(hardware.slides.wristServo.getPosition() - 0.005);
+		// if (gamepad2.dpad_left)
+		// 	hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() + 0.005);
+		// if (gamepad2.dpad_right)
+		// 	hardware.slides.elbowServo.setPosition(hardware.slides.elbowServo.getPosition() - 0.005);
 
 		hardware.loop();
 
 		telemetry.addData("Slides Position", hardware.slides.motor.getCurrentPosition());
 		telemetry.addData("Slides Set Position", hardware.slides.getCurrentSetPositionIndex());
-		telemetry.addData("Elbow Position", hardware.slides.elbowServo.getPosition());
-		telemetry.addData("Wrist Position", hardware.slides.wristServo.getPosition());
+		// telemetry.addData("Elbow Position", hardware.slides.elbowServo.getPosition());
+		// telemetry.addData("Wrist Position", hardware.slides.wristServo.getPosition());
 
 		telemetry.update();
 	}

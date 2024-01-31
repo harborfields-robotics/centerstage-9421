@@ -11,7 +11,7 @@ import java.util.stream.*;
 public class Slides
 {
     public DcMotor motor;
-	public Servo wristServo, elbowServo;
+	public Servo leftWristServo, rightWristServo, leftElbowServo, rightElbowServo;
 
 	/**
 	  * The circumference of the slides' spool, in inches.
@@ -71,8 +71,10 @@ public class Slides
 		// XXX: does this reverse the encoder direction as well?
 		this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		this.wristServo = hardware.get(Servo.class, Hardware.WRIST_SERVO_NAME);
-		this.elbowServo = hardware.get(Servo.class, Hardware.ELBOW_SERVO_NAME);
+		this.leftWristServo = hardware.get(Servo.class, Hardware.LEFT_WRIST_SERVO_NAME);
+		this.rightWristServo = hardware.get(Servo.class, Hardware.RIGHT_WRIST_SERVO_NAME);
+		this.leftElbowServo = hardware.get(Servo.class, Hardware.LEFT_ELBOW_SERVO_NAME);
+		this.rightElbowServo = hardware.get(Servo.class, Hardware.RIGHT_ELBOW_SERVO_NAME);
     }
 
 	/**
@@ -183,19 +185,33 @@ public class Slides
 
 	/**
 	 * Instructs the wrist servo to move to the target position.
-	 * @param position the target position, a value in the range [0, 1]
+	 * @param leftPosition the target position for the left wrist servo, a value in the range [0, 1]
+	 * @param rightPosition the target position for the right wrist servo, a value in the range [0, 1]
 	 */
+	public void setWristPosition(double leftPosition, double rightPosition)
+	{
+		leftWristServo.setPosition(leftPosition);
+		rightWristServo.setPosition(rightPosition);
+	}
+
 	public void setWristPosition(double position)
 	{
-		wristServo.setPosition(position);
+		setWristPosition(position, position);
 	}
 
 	/**
-	 * Instructs the elbow servo to move to the target position.
-	 * @param position the target position, a value in the range [0, 1]
+	 * Instructs the elbow servos to move to the target position.
+	 * @param leftPosition the target position for the left elbow servo, a value in the range [0, 1]
+	 * @param rightPosition the target position for the right elbow servo, a value in the range [0, 1]
 	 */
+	public void setElbowPosition(double leftPosition, double rightPosition)
+	{
+		leftElbowServo.setPosition(leftPosition);
+		rightElbowServo.setPosition(rightPosition);
+	}
+
 	public void setElbowPosition(double position)
 	{
-		elbowServo.setPosition(position);
+		setElbowPosition(1 - position, position);
 	}
 }

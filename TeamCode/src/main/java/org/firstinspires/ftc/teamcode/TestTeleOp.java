@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,7 +16,8 @@ public class TestTeleOp extends LinearOpMode
     private Hardware hardware;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -23,13 +25,13 @@ public class TestTeleOp extends LinearOpMode
 
         waitForStart();
         runtime.reset();
-        boolean started = false;
 
-        DcMotor motor = hardwareMap.get(DcMotor.class, "teeth-motor");
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hardware.drivetrain.encoders.forEach(Hardware::resetEncoder);
+
         while (opModeIsActive()) {
-            telemetry.addData("position", motor.getCurrentPosition());
+            telemetry.addData("left", hardware.drivetrain.encoderLeft.getCurrentPosition());
+            telemetry.addData("back", hardware.drivetrain.encoderBack.getCurrentPosition());
+            telemetry.addData("right", hardware.drivetrain.encoderRight.getCurrentPosition());
             telemetry.update();
         }
     }

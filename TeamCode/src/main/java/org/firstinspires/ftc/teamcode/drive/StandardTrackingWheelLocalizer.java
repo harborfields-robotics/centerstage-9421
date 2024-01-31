@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.util.Encoder;
@@ -28,8 +29,11 @@ import java.util.List;
  */
 @Config
 public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 7300;
-    public static double WHEEL_RADIUS = 4 + 5/16.0; // in
+    public static double WHEEL_RADIUS = (4 + 5/16.0) / (2 * Math.PI); // in
+    // trial 1 L / trial 1 R; trial 2 L / trial 2 R
+    // -135851 / 136857; -135999 / 137180
+    private static final double TICKS_IN_3_TILES = (135851 + 136857 + 135999 + 137180) / 4.0;
+    public static double TICKS_PER_REV = (TICKS_IN_3_TILES / (12 * 2 * 3)) * (2 * Math.PI * WHEEL_RADIUS);
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double LATERAL_DISTANCE = 11 + 5/16.0; // in; distance between the left and right wheels
@@ -38,7 +42,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 	public static double X_MULTIPLIER = 1;
 	public static double Y_MULTIPLIER = 1;
 
-    private Encoder leftEncoder, rightEncoder, frontEncoder;
+    public Encoder leftEncoder, rightEncoder, frontEncoder;
 
     private List<Integer> lastEncPositions, lastEncVels;
 
@@ -52,9 +56,17 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         lastEncPositions = lastTrackingEncPositions;
         lastEncVels = lastTrackingEncVels;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, Hardware.LEFT_ENCODER_NAME));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, Hardware.RIGHT_ENCODER_NAME));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, Hardware.BACK_ENCODER_NAME));
+        DcMotorEx tmpMotor;
+        tmpMotor = hardwareMap.get(DcMotorEx.class, Hardware.LEFT_ENCODER_NAME);
+        tmpMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Hardware.leftEncoder = leftEncoder = new Encoder(tmpMotor);
+        tmpMotor = hardwareMap.get(DcMotorEx.class, Hardware.BACK_ENCODER_NAME);
+        tmpMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Hardware.backEncoder = frontEncoder = new Encoder(tmpMotor);
+        tmpMotor = hardwareMap.get(DcMotorEx.class, Hardware.RIGHT_ENCODER_NAME);
+        tmpMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Hardware.rightEncoder = rightEncoder = new Encoder(tmpMotor);
+        tmpMotor = null;
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }

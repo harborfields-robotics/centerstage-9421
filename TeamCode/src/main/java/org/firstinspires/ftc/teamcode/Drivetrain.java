@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
 import java.util.Arrays;
 import java.util.List;
-import java.lang.Math;
-import java.util.stream.IntStream;
 
 /**
   * The Drivetrain class handles the movement of a holonomic drivetrain, that is, one using four mecanum wheels.
@@ -21,30 +16,12 @@ import java.util.stream.IntStream;
 public class Drivetrain
 {
 	public DcMotorEx motorFL, motorFR, motorBL, motorBR;
-	public DcMotor encoderLeft, encoderBack, encoderRight;
+	public DcMotorEx encoderLeft, encoderBack, encoderRight;
 	public List<DcMotorEx> motors;
 	public static final String[] MOTOR_NAMES = { "FL", "BL", "BR", "FR" };
+	public static final String[] ENCODER_NAMES = { "left", "back", "right" };
 	public List<DcMotorEx> encoders;
 	public Hardware hardware;
-
-	public static class Heading
-	{
-		public double x, y, theta;
-		public Heading(double x, double y, double theta)
-		{
-			this.x = x;
-			this.y = y;
-			this.theta = theta;
-		}
-
-		public Heading() { this(0, 0, 0); }
-	}
-
-	public static final double
-		TICKS_PER_TILE = 620,
-		TICKS_PER_DEGREE = 7.45,
-		TICKS_PER_SIDE_DIFFERENCE = 30,
-		STRAFE_CONSTANT = 1.3;
 
 	public Drivetrain(Hardware hardware)
 	{
@@ -56,26 +33,22 @@ public class Drivetrain
 		this.motorFR = hardware.get(DcMotorEx.class, Hardware.FR_MOTOR_NAME);
 		this.motors = Arrays.asList(motorFL, motorBL, motorBR, motorFR);
 
-		// this.encoderLeft = hardware.get(DcMotor.class, Hardware.LEFT_ENCODER_NAME);
-		// this.encoderBack = hardware.get(DcMotor.class, Hardware.BACK_ENCODER_NAME);
-		// this.encoderRight = hardware.get(DcMotor.class, Hardware.RIGHT_ENCODER_NAME);
-		// this.encoders = Arrays.asList(encoderLeft, encoderBack, encoderRight);
+		this.encoderLeft = hardware.get(DcMotorEx.class, Hardware.LEFT_ENCODER_NAME);
+		this.encoderBack = hardware.get(DcMotorEx.class, Hardware.BACK_ENCODER_NAME);
+		this.encoderRight = hardware.get(DcMotorEx.class, Hardware.RIGHT_ENCODER_NAME);
+		this.encoders = Arrays.asList(encoderLeft, encoderBack, encoderRight);
 
 		for (DcMotor m: motors) {
 			m.setPower(0);
 			m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 			m.setMode(STOP_AND_RESET_ENCODER);
-			//m.setMode(RUN_WITHOUT_ENCODER);
-			m.setMode(RUN_USING_ENCODER);
+			m.setMode(RUN_WITHOUT_ENCODER);
 		}
 
 		motorFL.setDirection(DcMotor.Direction.FORWARD);
 		motorFR.setDirection(DcMotor.Direction.REVERSE);
 		motorBL.setDirection(DcMotor.Direction.FORWARD);
 		motorBR.setDirection(DcMotor.Direction.REVERSE);
-
-		// for (DcMotor e: encoders)
-		// 	e.setMode(STOP_AND_RESET_ENCODER);
 	}
 
 	/**
@@ -150,12 +123,12 @@ public class Drivetrain
 	  * Sets the motor powers in order to drive in the specified direction with a specific maximum power.
 	  * @param deltaY the amount to move forward, a value in the range [-1, 1]
 	  * @param deltaX the amount to strafe right, a value in the range [-1, 1]
-	   @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
+	  * @param deltaTheta the amount to rotate clockwise, a value in the range [-1, 1]
 	  * @param power a value each motor's power is multiplied by
 	  */
 	public void driveLoop(double deltaY, double deltaX, double deltaTheta, double power)
 	{
-		double powers[] = computeMotorPowers(deltaY, deltaX, deltaTheta);
+		double[] powers = computeMotorPowers(deltaY, deltaX, deltaTheta);
 		for (int i = 0; i < powers.length; i++)
 			motors.get(i).setPower(power * powers[i]);
 	}
@@ -166,6 +139,7 @@ public class Drivetrain
 			m.setPower(0);
 	}
 
+	/*
 	public int[] calculateHeadingTargets(Heading heading)
 	{
 		int[] targets = new int[4];
@@ -185,7 +159,7 @@ public class Drivetrain
 			motors.get(i).setTargetPosition(targets[i]);
 		for (int i = 0; i < motors.size(); i++)
 			motors.get(i).setMode(modes[i]);
-	}
+	} */
 
 	public void telemetrize()
 	{

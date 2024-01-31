@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 
@@ -26,11 +27,13 @@ public class Hardware
 {
 	public HardwareMap hardwareMap;
 	public Drivetrain drivetrain;
-	public Telemetry telemetry;
+	public static Telemetry telemetry;
 	public DoubleVision doubleVision;
 	public Slides slides;
 	public Intake intake;
 	public Launcher launcher;
+
+	public static Encoder leftEncoder, backEncoder, rightEncoder;
 
 	// TODO: update configuration names
 	public static final String
@@ -47,15 +50,17 @@ public class Hardware
 
 		// I guess his mouth is on his hand
 		SLIDES_MOTOR_NAME   = "slides-motor",  /* expansion hub port 0 */
-		WRIST_SERVO_NAME    = "wrist-servo",   /* expansion hub port 1 */
-		ELBOW_SERVO_NAME    = "elbow-servo",   /* expansion hub port 2 */
+		RIGHT_WRIST_SERVO_NAME    = "right-wrist-servo",   /* expansion hub port 1 */
+		LEFT_WRIST_SERVO_NAME    = "left-wrist-servo",   /* expansion hub port 1 */
+		RIGHT_ELBOW_SERVO_NAME    = "right-elbow-servo",   /* expansion hub port 1 */
+		LEFT_ELBOW_SERVO_NAME    = "left-elbow-servo",   /* expansion hub port 1 */
 
 		// FIXME: encoders must use the names of existing motors due to space constraints
-		LEFT_ENCODER_NAME   = "left-encoder",  /* expansion hub port 1 */
+		LEFT_ENCODER_NAME   = "teeth-motor",   /* expansion hub port 1 */
 		BACK_ENCODER_NAME   = "back-encoder",  /* expansion hub port 2 */
 		RIGHT_ENCODER_NAME  = "right-encoder", /* expansion hub port 3 */
 
-		LAUNCHER_SERVO_NAME = "launcher-motor"; /* expansion hub port 2 */
+		LAUNCHER_SERVO_NAME = "launcher-servo"; /* expansion hub port 2 */
 
 	/**
 	  * Creates a hardware object and initializes all hardware components.
