@@ -31,7 +31,7 @@ public class Slides
 
 	/**
 	  * The size, in encoder ticks, of the safety zone at both ends of the slides' range.
-	  * The slides will be prevented from moving further into a dead zone.
+	  * The slides wiel be prevented from moving further into a dead zone.
 	  */
 	public static final int DEADZONE_SIZE = 20;
 
@@ -43,8 +43,11 @@ public class Slides
 	  */
 	public static final int SET_POSITIONS[] = { MIN_POSITION, MAX_POSITION * 1/3, MAX_POSITION * 2/3, MAX_POSITION };
 
-	public static final double ELBOW_REST_POSITION = 0.50;
-	public static final double ELBOW_OUT_POSITION = 0.75;
+	public static final double RIGHT_ELBOW_REST_POSITION = 0.50;
+	public static final double LEFT_ELBOW_REST_POSITION = (1 - RIGHT_ELBOW_REST_POSITION);
+	public static final double RIGHT_ELBOW_OUT_POSITION = 0.75;
+	public static final double LEFT_ELBOW_OUT_POSITION = (1- RIGHT_ELBOW_OUT_POSITION);
+
 	public static final double ELBOW_DROP_POSITION = 0.2;
 
 	public static final double WRIST_DROP_POSITION = 0.45;
@@ -66,7 +69,6 @@ public class Slides
     public Slides(Hardware hardware)
     {
         this.motor = hardware.get(DcMotor.class, Hardware.SLIDES_MOTOR_NAME);
-		this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		// XXX: does this reverse the encoder direction as well?
 		this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -196,7 +198,7 @@ public class Slides
 
 	public void setWristPosition(double position)
 	{
-		setWristPosition(position, position);
+		setWristPosition(1 - position, position);
 	}
 
 	/**

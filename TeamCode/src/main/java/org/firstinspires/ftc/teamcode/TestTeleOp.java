@@ -26,12 +26,14 @@ public class TestTeleOp extends LinearOpMode
         waitForStart();
         runtime.reset();
 
-        hardware.drivetrain.encoders.forEach(Hardware::resetEncoder);
-
         while (opModeIsActive()) {
-            telemetry.addData("left", hardware.drivetrain.encoderLeft.getCurrentPosition());
-            telemetry.addData("back", hardware.drivetrain.encoderBack.getCurrentPosition());
-            telemetry.addData("right", hardware.drivetrain.encoderRight.getCurrentPosition());
+            if (gamepad1.right_trigger > 0.2)
+                hardware.slides.setElbowPosition(Math.abs(gamepad1.right_stick_x));
+            if (gamepad1.left_trigger > 0.2)
+                hardware.slides.setWristPosition(Math.abs(gamepad1.left_stick_x));
+            hardwareMap
+                    .getAll(Servo.class)
+                    .forEach((Servo i) -> telemetry.addData(hardware.getDeviceName(i), i.getPosition()));
             telemetry.update();
         }
     }
