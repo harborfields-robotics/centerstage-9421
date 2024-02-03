@@ -23,6 +23,7 @@ public class Hardware
 	public Launcher launcher;
 
 	public static Encoder leftEncoder, backEncoder, rightEncoder;
+	private double lastTimestamp;
 
 	// TODO: update configuration names
 	public static final String
@@ -64,6 +65,15 @@ public class Hardware
 		this.slides = new Slides(this);
 		this.intake = new Intake(this);
 		this.launcher = new Launcher(this);
+		lastTimestamp = System.nanoTime();
+	}
+
+	public double deltaTime()
+	{
+		long now = System.nanoTime();
+		double delta = (now - lastTimestamp) / 1e9;
+		lastTimestamp = now;
+		return delta;
 	}
 
 	/**

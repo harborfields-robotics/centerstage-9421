@@ -13,6 +13,11 @@ public class Slides
     public DcMotor motor;
 	public Servo leftWristServo, rightWristServo, leftElbowServo, rightElbowServo;
 
+	// WRIST DROP MAX: 0.725L 0.139R
+	// WRIST DRIVE: 0.072L 0.757R
+	// WRIST UP: 0.000L 0.936R
+	// SLIDES MAX: 2106
+
 	/**
 	  * The circumference of the slides' spool, in inches.
 	  */
@@ -21,7 +26,7 @@ public class Slides
 	/**
 	  * The highest possible position of the slides, in encoder ticks.
 	  */
-	public static final int MAX_POSITION = 6125;
+	public static final int MAX_POSITION = 2100;
 
 	/**
 	  * The lowest possible position of the slides, in encoder ticks.
@@ -31,7 +36,7 @@ public class Slides
 
 	/**
 	  * The size, in encoder ticks, of the safety zone at both ends of the slides' range.
-	  * The slides wiel be prevented from moving further into a dead zone.
+	  * The slides will be prevented from moving further into a dead zone.
 	  */
 	public static final int DEADZONE_SIZE = 20;
 
@@ -71,7 +76,7 @@ public class Slides
         this.motor = hardware.get(DcMotor.class, Hardware.SLIDES_MOTOR_NAME);
         this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		// XXX: does this reverse the encoder direction as well?
-		this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+		this.motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 		this.leftWristServo = hardware.get(Servo.class, Hardware.LEFT_WRIST_SERVO_NAME);
 		this.rightWristServo = hardware.get(Servo.class, Hardware.RIGHT_WRIST_SERVO_NAME);
@@ -97,6 +102,8 @@ public class Slides
 				if (!canMoveWithPower(motor.getPower()))
 					motor.setPower(0);
 				break;
+			case STOPPED:
+				break;
 		}
 	}
 
@@ -108,7 +115,6 @@ public class Slides
 	  */
 	public void setPower(double power)
 	{
-		power = -power;
 		if (state == State.RUNNING_TO_POSITION)
 			motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		if (!canMoveWithPower(power))
@@ -201,6 +207,11 @@ public class Slides
 		setWristPosition(1 - position, position);
 	}
 
+	public double getWristPosition()
+	{
+		return rightWristServo.getPosition();
+	}
+
 	/**
 	 * Instructs the elbow servos to move to the target position.
 	 * @param leftPosition the target position for the left elbow servo, a value in the range [0, 1]
@@ -215,5 +226,10 @@ public class Slides
 	public void setElbowPosition(double position)
 	{
 		setElbowPosition(1 - position, position);
+	}
+
+	public double getElbowPosition()
+	{
+		return rightElbowServo.getPosition();
 	}
 }
