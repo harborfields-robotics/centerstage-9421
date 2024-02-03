@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.*;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
   * The class representing the intake/outtake functionality of the robot.
@@ -9,8 +10,8 @@ import com.qualcomm.robotcore.util.*;
   */
 public class Intake
 {
-	private DcMotor teethMotor;
-	private Servo tongueServo;
+	public DcMotor teethMotor;
+	public Servo tongueServo;
 
 	/**
 	  * The time it takes to outtake one pixel, in nanoseconds.

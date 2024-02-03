@@ -25,24 +25,23 @@ public class Launcher
 	  */
 	public static final double PRIMED_POSITION = 0;
 
-	public Launcher(Hardware hardware)
-	{
+	public Launcher(Hardware hardware) {
 		this.hardware = hardware;
-		this.servo = hardware.get(Servo.class, Hardware.LAUNCHER_MOTOR_NAME);
-		this.servo.setPosition(PRIMED_POSITION);
+		this.servo = this.hardware.get(Servo.class, Hardware.LAUNCHER_SERVO_NAME);
 	}
 
 	/**
-	  * Launches the paper airplane by releasing the slingshot.
-	  * The launch will fail if the airplane has already been launched.
-	  * @return if the launch could be completed
-	  */
-	public boolean launch()
+	 * Launches the paper airplane by releasing the rubber band.
+	 */
+	public void launch() {
+		servo.setPosition(1);
+	}
+
+	/**
+	 * Returns the launcher to the state before launching.
+	 */
+	public void unlaunch()
 	{
-		if (launched)
-			return false;
-		servo.setPosition(RELEASE_POSITION);
-		launched = true;
-		return true;
+		servo.setPosition(0.40);
 	}
 }

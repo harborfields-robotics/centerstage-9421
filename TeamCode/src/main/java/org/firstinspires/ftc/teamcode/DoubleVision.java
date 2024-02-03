@@ -28,6 +28,7 @@ public class DoubleVision
 {
 	private AprilTagProcessor aprilTag;
 	private TfodProcessor tfod;
+	private ColorBlobProcessor colorBlob;
 	private VisionPortal visionPortal;
 	private Hardware hardware;
     private WebcamName webcam;
@@ -51,6 +52,7 @@ public class DoubleVision
 	{
 		this.hardware = hardware;
         this.webcam = hardware.tryGet(WebcamName.class, Hardware.WEBCAM_NAME);
+		this.colorBlob = new ColorBlobProcessor(hardware, Alliance.RED);
 		this.aprilTag = new AprilTagProcessor.Builder().build();
 		this.tfod = new TfodProcessor.Builder()
 			.setModelFileName(TFOD_MODEL_PATH)
@@ -59,7 +61,7 @@ public class DoubleVision
 		this.visionPortal = new VisionPortal.Builder()
 			.setCamera(webcam)
 			.setCameraResolution(CAMERA_RESOLUTION)
-			.addProcessors(tfod, aprilTag)
+			.addProcessors(tfod, aprilTag, colorBlob)
 			.build();
 	}
 
