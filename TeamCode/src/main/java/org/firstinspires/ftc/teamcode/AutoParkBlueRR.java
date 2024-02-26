@@ -5,29 +5,23 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.acmerobotics.dashboard.config.Config;
 
-@Config
-@Autonomous(name="Park as Red", group="OpMode")
-public class AutoParkRed extends OpMode
+@Disabled
+@Autonomous(name="Park as Blue (RoadRunner)", group="OpMode")
+public class AutoParkBlueRR extends OpMode
 {
 	Hardware hardware;
-	public static double duration = 2.500;
+	// VoltageSensor voltageSensor;
 
 	public void init()
 	{
 		hardware = new Hardware(hardwareMap, telemetry);
+		// hardwareMap.voltageSensor.iterator().next();
 	}
 
 	public void start()
 	{
-		// Util.sleep(10 * 1000);
-		long start = System.nanoTime();
-		while ((System.nanoTime() - start) < duration * 1e9) {
-			hardware.drivetrain.driveLoop(0, 1, 0, 1.0);
-			Util.sleep(50);
-		}
-
+		Util.sleep(10 * 1000);
 		hardware.drivetrain.stop();
 		stop();
 	}

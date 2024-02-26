@@ -51,4 +51,19 @@ public final class Util
 		}
 		return true;
 	}
+
+	public static double lerp(double t, double a, double b)
+	{
+		return a + t * (b - a);
+	}
+
+	public static double inverseLerp(double x, double a, double b)
+	{
+		return (x - a) / (b - a);
+	}
+
+	public static double remap(double x, double a0, double b0, double a1, double b1)
+	{
+		return lerp(inverseLerp(x, a0, b0), a1, b1);
+	}
 }

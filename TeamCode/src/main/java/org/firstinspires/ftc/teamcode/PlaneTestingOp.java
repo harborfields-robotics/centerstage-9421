@@ -6,29 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-/* Controller Layout
-   ------------------
-	Gamepad 1 (Movement):
-		* left stick - movement
-		* right stick x - strafing
-		* right stick y - forward/backward
-		* left stick x - rotation
-		* left trigger - slow mode (hold)
-		* dpad up - release launcher servo
-	Gamepad 2 (Scoring):
-		* left stick y - slides
-		* right trigger - intake continuous
-		* left trigger - outtake continuous
-		* right bumper - elbow return position
-		* left bumper - elbow drop position
-		* cross - wrist drop position
-		* circle - wrist in drive position
-		* square - wrist in grab position
-		* triangle - elbow out position
-   */
-
-@TeleOp(name="Two Controller OpMode", group="OpMode")
-public class TwoControllerTeleOp extends OpMode
+@TeleOp(name="Plane Testing OpMode", group="OpMode")
+public class PlaneTestingOp extends OpMode
 {
 	private Hardware hardware;
 	public final double TRIGGER_THRESHOLD = 0.1;

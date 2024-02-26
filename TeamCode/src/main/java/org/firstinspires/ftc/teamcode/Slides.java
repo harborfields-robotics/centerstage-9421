@@ -13,11 +13,6 @@ public class Slides
     public DcMotor motor;
 	public Servo leftWristServo, rightWristServo, leftElbowServo, rightElbowServo;
 
-	// WRIST DROP MAX: 0.725L 0.139R
-	// WRIST DRIVE: 0.072L 0.757R
-	// WRIST UP: 0.000L 0.936R
-	// SLIDES MAX: 2106
-
 	/**
 	  * The circumference of the slides' spool, in inches.
 	  */
@@ -48,28 +43,48 @@ public class Slides
 	  */
 	public static final int SET_POSITIONS[] = { MIN_POSITION, MAX_POSITION * 1/3, MAX_POSITION * 2/3, MAX_POSITION };
 
-	public static final double RIGHT_ELBOW_REST_POSITION = 0.50;
-	public static final double LEFT_ELBOW_REST_POSITION = (1 - RIGHT_ELBOW_REST_POSITION);
-	public static final double RIGHT_ELBOW_OUT_POSITION = 0.75;
-	public static final double LEFT_ELBOW_OUT_POSITION = (1- RIGHT_ELBOW_OUT_POSITION);
+	public static class Position
+	{
+		public double left, right;
+		public Position(double left, double right)
+		{
+			this.left = left;
+			this.right = right;
+		}
+	}
 
-	public static final double ELBOW_DROP_POSITION = 0.2;
+	public static final double
+		WRIST_DOWN_POSITION = 0.656,
+		WRIST_UP_POSITION = 0.859,
+		WRIST_MAX_POSITION = 0.974;
 
-	public static final double WRIST_DROP_POSITION = 0.45;
-	public static final double WRIST_REST_POSITION = 0.72;
-	public static final double WRIST_GRAB_POSITION = 0.62;
+	public static final double
+		ELBOW_DOWN_POSITION = 0.881,
+		ELBOW_UP_POSITION = 0.932,
+		ELBOW_MAX_POSITION = 0.252;
+
+	// WRIST DROP MAX: 0.725L 0.139R
+	// WRIST DRIVE: 0.072L 0.757R
+	// WRIST UP: 0.000L 0.936R
+	// SLIDES MAX: 2106
 
 	/**
 	  * Represents the possible states of the slides.
 	  */
-	public static enum State
+	public static enum SlideState
 	{
 		STOPPED,
 		RUNNING_TO_POSITION,
 		RUNNING_CONTINUOUS
 	}
 
-	private State state = State.STOPPED;
+	public static enum ArmPosition
+	{
+		STOPPED, DOWN, UP, SCORE_MIN, SCORE_MAX
+	}
+
+	private SlideState slideState = SlideState.STOPPED;
+	private ArmPosition armPosition = ArmPosition.STOPPED;
 
     public Slides(Hardware hardware)
     {
@@ -91,11 +106,11 @@ public class Slides
 	  */
 	public void loop()
 	{
-		switch (state) {
+		switch (slideState) {
 			case RUNNING_TO_POSITION:
 				if (!motor.isBusy()) {
 					motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-					state = State.STOPPED;
+					slideState = SlideState.STOPPED;
 				}
 				break;
 			case RUNNING_CONTINUOUS:
@@ -115,11 +130,11 @@ public class Slides
 	  */
 	public void setPower(double power)
 	{
-		if (state == State.RUNNING_TO_POSITION)
+		if (slideState == SlideState.RUNNING_TO_POSITION)
 			motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		if (!canMoveWithPower(power))
 			power = 0;
-		state = State.RUNNING_CONTINUOUS;
+		slideState = SlideState.RUNNING_CONTINUOUS;
 		motor.setPower(power);
 	}
 
@@ -185,10 +200,11 @@ public class Slides
 	  */
 	public void runToPosition(int position)
 	{
+		motor.setTargetPosition(position);
 		motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		// XXX: This uses the motor's internal PID so we may have to tune it
-		motor.setTargetPosition(position);
-		state = State.RUNNING_TO_POSITION;
+		motor.setPower(1);
+		slideState = SlideState.RUNNING_TO_POSITION;
 	}
 
 	/**
@@ -212,6 +228,11 @@ public class Slides
 		return rightWristServo.getPosition();
 	}
 
+	public void setWristPosition(Position position)
+	{
+		setWristPosition(position.left, position.right);
+	}
+
 	/**
 	 * Instructs the elbow servos to move to the target position.
 	 * @param leftPosition the target position for the left elbow servo, a value in the range [0, 1]
@@ -231,5 +252,52 @@ public class Slides
 	public double getElbowPosition()
 	{
 		return rightElbowServo.getPosition();
+	}
+
+	public void setElbowPosition(Position position)
+	{
+		setElbowPosition(position.left, position.right);
+	}
+
+	public void setArmPosition(ArmPosition slideState)
+	{
+		switch (armPosition) {
+			case DOWN:
+			case STOPPED:
+				switch (slideState) {
+					case UP:
+						setWristPosition(WRIST_UP_POSITION);
+						setElbowPosition(ELBOW_UP_POSITION);
+						break;
+					case SCORE_MAX:
+						setArmPosition(ArmPosition.UP);
+						setArmPosition(ArmPosition.SCORE_MAX);
+						break;
+				} break;
+			case UP:
+				switch (slideState) {
+					case SCORE_MAX:
+						setElbowPosition(ELBOW_MAX_POSITION);
+						setWristPosition(WRIST_MAX_POSITION);
+						break;
+					case DOWN:
+						setElbowPosition(ELBOW_DOWN_POSITION);
+						setWristPosition(WRIST_DOWN_POSITION);
+						break;
+				} break;
+			case SCORE_MAX:
+				switch (slideState) {
+					case DOWN:
+						setElbowPosition(ELBOW_DOWN_POSITION);
+						setWristPosition(WRIST_DOWN_POSITION);
+						break;
+					case UP:
+						setArmPosition(ArmPosition.DOWN);
+						setElbowPosition(ELBOW_UP_POSITION);
+						setWristPosition(WRIST_UP_POSITION);
+						break;
+				} break;
+		}
+		armPosition = slideState;
 	}
 }

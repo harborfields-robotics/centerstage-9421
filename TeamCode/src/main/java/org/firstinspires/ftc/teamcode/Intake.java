@@ -71,7 +71,7 @@ public class Intake
 	public void outtake()
 	{
 		state = State.OUTTAKING_CONTINUOUS;
-		tongueServo.setPosition(1);
+		tongueServo.setPosition(0.60);
 		teethMotor.setPower(1);
 	}
 

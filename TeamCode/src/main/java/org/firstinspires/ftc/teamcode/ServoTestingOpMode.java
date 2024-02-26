@@ -50,7 +50,7 @@ public class ServoTestingOpMode extends LinearOpMode
                     servos.get(selected).getPosition()
                     + Math.signum(gamepad1.right_stick_x)
                     * (0.1 + 0.1 * gamepad1.right_trigger)
-                    * hardware.deltaTime()
+                    * Hardware.deltaTime()
                     * Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y)
             );
             if (gamepad1.circle) {

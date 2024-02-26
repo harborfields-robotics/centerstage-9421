@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import org.firstinspires.ftc.teamcode.drive.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Encoder;
@@ -21,9 +23,10 @@ public class Hardware
 	public Slides slides;
 	public Intake intake;
 	public Launcher launcher;
+	public SampleMecanumDrive drive;
 
 	public static Encoder leftEncoder, backEncoder, rightEncoder;
-	private double lastTimestamp;
+	private static double lastTimestamp;
 
 	// TODO: update configuration names
 	public static final String
@@ -41,16 +44,16 @@ public class Hardware
 		// I guess his mouth is on his hand
 		SLIDES_MOTOR_NAME      = "slides-motor",      /* expansion hub port 0 */
 		RIGHT_WRIST_SERVO_NAME = "right-wrist-servo", /* expansion hub port 1 */
-		LEFT_WRIST_SERVO_NAME  = "left-wrist-servo",  /* expansion hub port 1 */
-		RIGHT_ELBOW_SERVO_NAME = "right-elbow-servo", /* expansion hub port 1 */
-		LEFT_ELBOW_SERVO_NAME  = "left-elbow-servo",  /* expansion hub port 1 */
+		LEFT_WRIST_SERVO_NAME  = "left-wrist-servo",  /* expansion hub port 3 */
+		RIGHT_ELBOW_SERVO_NAME = "right-elbow-servo", /* expansion hub port 2 */
+		LEFT_ELBOW_SERVO_NAME  = "left-elbow-servo",  /* expansion hub port 4 */
 
 		// FIXME: encoders must use the names of existing motors due to space constraints
 		LEFT_ENCODER_NAME      = "teeth-motor",       /* expansion hub port 1 */
 		BACK_ENCODER_NAME      = "back-encoder",      /* expansion hub port 2 */
 		RIGHT_ENCODER_NAME     = "right-encoder",     /* expansion hub port 3 */
 
-		LAUNCHER_SERVO_NAME    = "launcher-servo";    /* expansion hub port 2 */
+		LAUNCHER_SERVO_NAME    = "launcher-servo";    /* control hub port 5 */
 
 	/**
 	  * Creates a hardware object and initializes all hardware components.
@@ -58,7 +61,7 @@ public class Hardware
 	public Hardware(HardwareMap hardwareMap, Telemetry telemetry)
 	{
 		this.hardwareMap = hardwareMap;
-		this.telemetry = telemetry;
+		this.telemetry = telemetry; //new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 		// this.telemetry.setAutoClear(false);
 		this.drivetrain = new Drivetrain(this);
 		this.doubleVision = new DoubleVision(this);
@@ -68,7 +71,7 @@ public class Hardware
 		lastTimestamp = System.nanoTime();
 	}
 
-	public double deltaTime()
+	public static double deltaTime()
 	{
 		long now = System.nanoTime();
 		double delta = (now - lastTimestamp) / 1e9;
