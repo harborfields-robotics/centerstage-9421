@@ -45,9 +45,9 @@ public class Drivetrain
 			m.setMode(RUN_WITHOUT_ENCODER);
 		}
 
-		motorFL.setDirection(DcMotor.Direction.FORWARD);
+		motorFL.setDirection(DcMotor.Direction.REVERSE);
 		motorFR.setDirection(DcMotor.Direction.REVERSE);
-		motorBL.setDirection(DcMotor.Direction.FORWARD);
+		motorBL.setDirection(DcMotor.Direction.REVERSE);
 		motorBR.setDirection(DcMotor.Direction.REVERSE);
 	}
 

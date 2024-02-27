@@ -46,7 +46,7 @@ public class PlaneTestingOp extends OpMode
 		/* scoring (gamepad 2) */
 		double slidePower = -Math.pow(gamepad2.left_stick_y, 3) * 0.75;
 		if (gamepad2.left_bumper)
-			hardware.slides.motor.setPower(slidePower);
+			hardware.slides.leftMotor.setPower(slidePower);
 		else
 			hardware.slides.setPower(slidePower);
 

@@ -1,4 +1,11 @@
 package org.firstinspires.ftc.teamcode;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+
 import java.lang.Math;
 
 /**
@@ -65,5 +72,14 @@ public final class Util
 	public static double remap(double x, double a0, double b0, double a1, double b1)
 	{
 		return lerp(inverseLerp(x, a0, b0), a1, b1);
+	}
+
+	public static void canvasDrawMat(Canvas canvas, Mat mat)
+	{
+		Bitmap bitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
+		Mat rgb = new Mat();
+		Imgproc.cvtColor(mat, rgb, Imgproc.COLOR_BGR2RGB);
+		Utils.matToBitmap(rgb, bitmap);
+		canvas.drawBitmap(bitmap, 0, 0, null);
 	}
 }

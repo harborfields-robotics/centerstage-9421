@@ -6,12 +6,13 @@ import java.util.*;
 import java.util.stream.*;
 
 /**
-  * The Slides class handles the movement of the slides and the sandwitch.
+  * The Slides class handles the movement of the slides and the sandwich.
   */
 public class Slides
 {
-    public DcMotor motor;
+    public DcMotor leftMotor, rightMotor;
 	public Servo leftWristServo, rightWristServo, leftElbowServo, rightElbowServo;
+	public TouchSensor limitSwitch;
 
 	/**
 	  * The circumference of the slides' spool, in inches.
@@ -88,15 +89,20 @@ public class Slides
 
     public Slides(Hardware hardware)
     {
-        this.motor = hardware.get(DcMotor.class, Hardware.SLIDES_MOTOR_NAME);
-        this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.leftMotor = hardware.get(DcMotor.class, Hardware.LEFT_SLIDES_MOTOR_NAME);
+        this.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		// XXX: does this reverse the encoder direction as well?
-		this.motor.setDirection(DcMotorSimple.Direction.FORWARD);
+		this.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+		this.rightMotor = hardware.get(DcMotor.class, Hardware.RIGHT_SLIDES_MOTOR_NAME);
+		this.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		this.rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		this.leftWristServo = hardware.get(Servo.class, Hardware.LEFT_WRIST_SERVO_NAME);
 		this.rightWristServo = hardware.get(Servo.class, Hardware.RIGHT_WRIST_SERVO_NAME);
 		this.leftElbowServo = hardware.get(Servo.class, Hardware.LEFT_ELBOW_SERVO_NAME);
 		this.rightElbowServo = hardware.get(Servo.class, Hardware.RIGHT_ELBOW_SERVO_NAME);
+		this.limitSwitch = hardware.get(TouchSensor.class, Hardware.LIMIT_SWITCH_NAME);
     }
 
 	/**
@@ -108,14 +114,17 @@ public class Slides
 	{
 		switch (slideState) {
 			case RUNNING_TO_POSITION:
-				if (!motor.isBusy()) {
-					motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+				if (!leftMotor.isBusy() && !rightMotor.isBusy()) {
+					leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+					rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 					slideState = SlideState.STOPPED;
 				}
 				break;
 			case RUNNING_CONTINUOUS:
-				if (!canMoveWithPower(motor.getPower()))
-					motor.setPower(0);
+				if (!canMoveWithPower(leftMotor.getPower()) || !canMoveWithPower(rightMotor.getPower())) {
+					leftMotor.setPower(0);
+					rightMotor.setPower(0);
+				}
 				break;
 			case STOPPED:
 				break;
@@ -130,12 +139,14 @@ public class Slides
 	  */
 	public void setPower(double power)
 	{
-		if (slideState == SlideState.RUNNING_TO_POSITION)
-			motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		if (!canMoveWithPower(power))
+		if (slideState == SlideState.RUNNING_TO_POSITION) {
+			leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+			rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		} if (!canMoveWithPower(power))
 			power = 0;
 		slideState = SlideState.RUNNING_CONTINUOUS;
-		motor.setPower(power);
+		leftMotor.setPower(power);
+		rightMotor.setPower(power);
 	}
 
 	/**
@@ -143,7 +154,7 @@ public class Slides
 	  */
 	public double getPower()
 	{
-		return motor.getPower();
+		return leftMotor.getPower();
 	}
 
 	/**
@@ -153,7 +164,7 @@ public class Slides
 	  */
 	public int getCurrentSetPositionIndex()
 	{
-		int position = motor.getCurrentPosition();
+		int position = leftMotor.getCurrentPosition();
 		int minIndex = 0;
 		double minDiff = Double.POSITIVE_INFINITY;
 		for (int i = 0; i < SET_POSITIONS.length; i++) {
@@ -173,7 +184,13 @@ public class Slides
 	  */
 	public boolean canMoveWithPower(double power)
 	{
-		int position = motor.getCurrentPosition();
+		int leftPosition = leftMotor.getCurrentPosition(),
+			rightPosition = rightMotor.getCurrentPosition();
+		int position;
+		if (power > 0)
+			position = Math.max(leftPosition, rightPosition);
+		else
+			position = Math.min(leftPosition, rightPosition);
 		return !(power > 0 && MAX_POSITION - position <= DEADZONE_SIZE
 				|| power < 0 && MIN_POSITION - position >= -DEADZONE_SIZE);
 	}
@@ -200,10 +217,14 @@ public class Slides
 	  */
 	public void runToPosition(int position)
 	{
-		motor.setTargetPosition(position);
-		motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		leftMotor.setTargetPosition(position);
+		leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		// XXX: This uses the motor's internal PID so we may have to tune it
-		motor.setPower(1);
+		leftMotor.setPower(1);
+		rightMotor.setTargetPosition(position);
+		rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		// XXX: This uses the motor's internal PID so we may have to tune it
+		rightMotor.setPower(1);
 		slideState = SlideState.RUNNING_TO_POSITION;
 	}
 
