@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,10 +47,7 @@ public class Drivetrain
 			m.setMode(RUN_WITHOUT_ENCODER);
 		}
 
-		motorFL.setDirection(DcMotor.Direction.FORWARD);
-		motorFR.setDirection(DcMotor.Direction.REVERSE);
-		motorBL.setDirection(DcMotor.Direction.FORWARD);
-		motorBR.setDirection(DcMotor.Direction.REVERSE);
+		motorBL.setDirection(REVERSE);
 	}
 
 	/**

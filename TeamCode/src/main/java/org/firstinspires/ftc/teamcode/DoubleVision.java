@@ -116,4 +116,9 @@ public class DoubleVision
             hardware.telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
         }
     }
+
+	public SpikeMark getSpikeMark()
+	{
+		return colorBlob.getSpikeMark();
+	}
 }

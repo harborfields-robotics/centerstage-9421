@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.*;
@@ -12,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
   * The Hardware class contains all other hardware subsystems, including telemetry and computer vision.
@@ -56,7 +54,7 @@ public class Hardware
 	public Slides slides;
 	public Intake intake;
 	public Launcher launcher;
-	public SampleMecanumDrive drive;
+	public SampleMecanumDrive roadrunner;
 	public Alliance alliance = Alliance.RED;
 
 	public static ElapsedTime timer = new ElapsedTime();
@@ -77,6 +75,11 @@ public class Hardware
 		this.intake = new Intake(this);
 		this.launcher = new Launcher(this);
 		lastTimestamp = System.nanoTime();
+	}
+
+	public void initRoadRunner()
+	{
+		this.roadrunner = new SampleMecanumDrive(hardwareMap, drivetrain.motors);
 	}
 
 	public static double deltaTime()

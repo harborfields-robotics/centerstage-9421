@@ -23,11 +23,11 @@ public class Slides
 	  * The circumference of the slides' spool, in inches.
 	  */
 	public static final double SPOOL_CIRCUMFERENCE = 112 / 25.4; // 112 mm
-		
+
 	/**
 	  * The highest possible position of the slides, in encoder ticks.
 	  */
-	public static final int MAX_POSITION = 2000;
+	public static final int MAX_POSITION = 1800;
 
 	/**
 	  * The lowest possible position of the slides, in encoder ticks.
@@ -81,7 +81,8 @@ public class Slides
 	{
 		STOPPED,
 		RUNNING_TO_POSITION,
-		RUNNING_CONTINUOUS
+		RUNNING_CONTINUOUS,
+		HOLDING_POSITION
 	}
 
 	public static enum ArmPosition
@@ -89,8 +90,8 @@ public class Slides
 		STOPPED, DOWN, UP, SCORE_MIN, SCORE_MAX
 	}
 
-	private SlideState slideState = SlideState.STOPPED;
-	private ArmPosition armPosition = ArmPosition.STOPPED;
+	public SlideState slideState = SlideState.STOPPED;
+	public ArmPosition armPosition = ArmPosition.STOPPED;
 
     public Slides(Hardware hardware)
     {
@@ -322,5 +323,29 @@ public class Slides
 				} break;
 		}
 		armPosition = slideState;
+	}
+
+	public void holdPosition()
+	{
+		int position = rightMotor.getCurrentPosition();
+		rightMotor.setTargetPosition(position);
+		rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		rightMotor.setPower(0.5);
+		slideState = SlideState.HOLDING_POSITION;
+	}
+
+	public void stopHolding()
+	{
+		if (slideState == SlideState.HOLDING_POSITION) {
+			slideState = SlideState.STOPPED;
+			rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		}
+	}
+
+	public void setWinchPower(double power)
+	{
+		if (power < 0 && winchMotor.getCurrentPosition() < 20)
+			power = 0;
+		winchMotor.setPower(power);
 	}
 }

@@ -80,7 +80,17 @@ public class SampleMecanumDrive extends MecanumDrive {
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    public SampleMecanumDrive(HardwareMap hardwareMap) {
+    public SampleMecanumDrive(HardwareMap hardwareMap)
+    {
+        this(hardwareMap, Arrays.asList(
+                hardwareMap.get(DcMotorEx.class, Hardware.FL_MOTOR_NAME),
+                hardwareMap.get(DcMotorEx.class, Hardware.BL_MOTOR_NAME),
+                hardwareMap.get(DcMotorEx.class, Hardware.BR_MOTOR_NAME),
+                hardwareMap.get(DcMotorEx.class, Hardware.FR_MOTOR_NAME)
+        ));
+    }
+
+    public SampleMecanumDrive(HardwareMap hardwareMap, List<DcMotorEx> motors) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
@@ -99,12 +109,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         //         DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         // imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, Hardware.FL_MOTOR_NAME);
-        leftRear = hardwareMap.get(DcMotorEx.class, Hardware.BL_MOTOR_NAME);
-        rightRear = hardwareMap.get(DcMotorEx.class, Hardware.BR_MOTOR_NAME);
-        rightFront = hardwareMap.get(DcMotorEx.class, Hardware.FR_MOTOR_NAME);
-
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        this.motors = motors;
+        leftFront = motors.get(0);
+        leftRear = motors.get(1);
+        rightRear = motors.get(2);
+        rightFront = motors.get(3);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -121,12 +130,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
-
-        // TODO: reverse any motors using DcMotor.setDirection()
-		leftFront.setDirection(DcMotor.Direction.REVERSE);
-		rightFront.setDirection(DcMotor.Direction.FORWARD);
-		leftRear.setDirection(DcMotor.Direction.REVERSE);
-		rightRear.setDirection(DcMotor.Direction.FORWARD);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();

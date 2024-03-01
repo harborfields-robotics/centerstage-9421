@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode;
+import org.opencv.core.Scalar;
+
 import java.lang.Math;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 
 /**
   * A utility class containing various methods that don't fit anywhere else.
@@ -66,4 +73,10 @@ public final class Util
 	{
 		return lerp(inverseLerp(x, a0, b0), a1, b1);
 	}
+
+	public static double scalarAbs(Scalar scalar)
+	{
+		return Math.sqrt(Arrays.stream(scalar.val).map(x -> Math.pow(x, 2)).reduce(1, Double::sum));
+	}
+
 }

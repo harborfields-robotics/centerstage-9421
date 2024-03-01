@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
+
 /* Controller Layout
    ------------------
 	Gamepad 1 (Movement):
@@ -56,21 +58,16 @@ public class TwoControllerTeleOp extends OpMode
 		/* movement (gamepad 1) */
 		boolean slideSafety = !(gamepad1.left_bumper || gamepad2.left_bumper) && hardware.slides.limitSwitch.isPressed();
 		boolean slowMode = gamepad1.left_trigger > TRIGGER_THRESHOLD;
-		// hardware.drivetrain.driveLoop(
-		// 		Math.max(-gamepad1.left_stick_y, slideSafety ? 0 : -1),
-		// 		gamepad1.left_stick_x,
-		// 		gamepad1.right_stick_x,
-		// 		slowMode ? SLOW_RATE : 1.0);
 
-		double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-		double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-		double rx = gamepad1.right_stick_x;
+		double y = -Math.min(gamepad1.left_stick_y, slideSafety ? 0 : 1); // Remember, Y stick value is reversed
+		double x =  gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+		double rx = slideSafety ? 0 : gamepad1.right_stick_x;
 
 		// Denominator is the largest motor power (absolute value) or 1
 		// This ensures all the powers maintain the same ratio,
 		// but only if at least one is out of the range [-1, 1]
 		// double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-		double denominator = 1/(0.5);
+		double denominator = 1/(0.5 * (slowMode ? SLOW_RATE : 1));
 		double[] powers = {
 			(y + x + rx) / denominator,
 			(y - x + rx) / denominator,
@@ -87,14 +84,22 @@ public class TwoControllerTeleOp extends OpMode
 
 		/* scoring (gamepad 2) */
 		double slidePower = -Math.pow(gamepad2.left_stick_y, 3) * 0.75;
-		hardware.slides.winchMotor.setPower(gamepad2.right_stick_x);
+		if (gamepad2.left_bumper)
+			hardware.slides.winchMotor.setPower(gamepad2.right_stick_x);
+		else
+			hardware.slides.setWinchPower(gamepad2.right_stick_x);
 		if (gamepad2.left_bumper && gamepad2.right_bumper)
 			hardware.hardwareMap.getAll(DcMotor.class).forEach(Hardware::resetEncoder);
 		else if (gamepad2.left_bumper) {
+//			hardware.slides.stopHolding();
 			hardware.slides.leftMotor.setPower(slidePower);
 			hardware.slides.rightMotor.setPower(slidePower);
-		} else
-			hardware.slides.setPower(slidePower);
+		} else {
+			if (slidePower != 0)
+				hardware.slides.setPower(slidePower);
+			//else
+			//	hardware.slides.holdPosition();
+		}
 
 		if (gamepad2.right_trigger > TRIGGER_THRESHOLD)
 			hardware.intake.intake();
@@ -109,6 +114,11 @@ public class TwoControllerTeleOp extends OpMode
 			hardware.slides.setArmPosition(Slides.ArmPosition.DOWN);
 		if (gamepad2.triangle)
 			hardware.slides.setArmPosition(Slides.ArmPosition.UP);
+		if (gamepad2.square)
+				if (hardware.slides.slideState == Slides.SlideState.HOLDING_POSITION)
+					hardware.slides.stopHolding();
+				else
+					hardware.slides.holdPosition();
 		// hardware.slides.setWristPosition(
 		// 		hardware.slides.getWristPosition()
 		// 		+ ((gamepad2.dpad_right ? 0 : 1) - (gamepad2.dpad_left ? 0 : 1))
@@ -122,11 +132,10 @@ public class TwoControllerTeleOp extends OpMode
 						+ ((gamepad2.dpad_right ? 0 : 1) - (gamepad2.dpad_left ? 0 : 1))
 						* ELBOW_MOVE_RATE * Hardware.deltaTime());
 
-		telemetry.addData("left slide motor", hardware.slides.leftMotor.getCurrentPosition());
-		telemetry.addData("right slide motor", hardware.slides.rightMotor.getCurrentPosition());
-		telemetry.addData("left elbow", hardware.slides.leftElbowServo.getPosition());
-		telemetry.addData("right elbow", hardware.slides.rightElbowServo.getPosition());
-		telemetry.addData("winch", hardware.slides.winchMotor.getCurrentPosition());
+		telemetry.addData("slide pos", hardware.slides.rightMotor.getCurrentPosition());
+		telemetry.addData("slide pwr", hardware.slides.rightMotor.getPower());
+		telemetry.addData("slide act", hardware.slides.slideState);
+		telemetry.addData("winch pos", hardware.slides.winchMotor.getCurrentPosition());
 		telemetry.addData("deltaTime", Hardware.deltaTime());
 		telemetry.update();
 
