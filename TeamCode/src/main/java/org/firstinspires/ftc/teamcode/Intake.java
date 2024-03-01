@@ -111,6 +111,13 @@ public class Intake
 		state = State.OUTTAKING_ONE;
 	}
 
+	public void outtakeOneAuto()
+	{
+		outtake();
+		Util.sleep((long)(OUTTAKE_ONE_DURATION_NS / 1e6));
+		stop();
+	}
+
 	/**
 	  * Outtakes both pixels in the sandwitch without blocking the thread.
 	  * @see #loop()

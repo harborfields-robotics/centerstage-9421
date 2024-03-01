@@ -4,18 +4,51 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.drive.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
   * The Hardware class contains all other hardware subsystems, including telemetry and computer vision.
   */
 public class Hardware
 {
+	// TODO: update configuration names
+	public static final String
+		WEBCAM_NAME             = "Webcam 1",          /* USB port             */
+
+		FL_MOTOR_NAME           = "fl-motor",          /* control hub port 0   */
+		BL_MOTOR_NAME           = "bl-motor",          /* control hub port 1   */
+		BR_MOTOR_NAME           = "br-motor",          /* control hub port 2   */
+		FR_MOTOR_NAME           = "fr-motor",          /* control hub port 3   */
+
+		// They're really more like lips to be honest but they _look_ like teeth
+		TEETH_MOTOR_NAME        = "teeth-motor",       /* expansion hub port 1 */
+		TONGUE_SERVO_NAME       = "tongue-servo",      /* expansion hub port 0 */
+
+		// I guess his mouth is on his hand
+		WINCH_MOTOR_NAME        = "winch-motor",
+		LEFT_SLIDES_MOTOR_NAME  = "left-slides-motor", /* expansion hub port 0 */
+		RIGHT_SLIDES_MOTOR_NAME = "right-slides-motor", /* expansion hub port 0 */
+		LIMIT_SWITCH_NAME       = "limit-switch",      /* control hub port 0   */
+		RIGHT_WRIST_SERVO_NAME  = "right-wrist-servo", /* expansion hub port 1 */
+		LEFT_WRIST_SERVO_NAME   = "left-wrist-servo",  /* expansion hub port 3 */
+		RIGHT_ELBOW_SERVO_NAME  = "right-elbow-servo", /* expansion hub port 2 */
+		LEFT_ELBOW_SERVO_NAME   = "left-elbow-servo",  /* expansion hub port 4 */
+
+		// FIXME: encoders must use the names of existing motors due to space constraints
+		LEFT_ENCODER_NAME       = "fl-motor",
+		BACK_ENCODER_NAME       = "bl-motor",
+		RIGHT_ENCODER_NAME      = "br-motor",
+
+		LAUNCHER_SERVO_NAME     = "launcher-servo";    /* control hub port 5 */
+
 	public HardwareMap hardwareMap;
 	public Drivetrain drivetrain;
 	public static Telemetry telemetry;
@@ -24,36 +57,11 @@ public class Hardware
 	public Intake intake;
 	public Launcher launcher;
 	public SampleMecanumDrive drive;
+	public Alliance alliance = Alliance.RED;
 
+	public static ElapsedTime timer = new ElapsedTime();
 	public static Encoder leftEncoder, backEncoder, rightEncoder;
 	private static double lastTimestamp;
-
-	// TODO: update configuration names
-	public static final String
-		WEBCAM_NAME            = "Webcam 1",          /* USB port             */
-
-		FL_MOTOR_NAME          = "fl-motor",          /* control hub port 0   */
-		BL_MOTOR_NAME          = "bl-motor",          /* control hub port 1   */
-		BR_MOTOR_NAME          = "br-motor",          /* control hub port 2   */
-		FR_MOTOR_NAME          = "fr-motor",          /* control hub port 3   */
-
-		// They're really more like lips to be honest but they _look_ like teeth
-		TEETH_MOTOR_NAME       = "teeth-motor",       /* expansion hub port 1 */
-		TONGUE_SERVO_NAME      = "tongue-servo",      /* expansion hub port 0 */
-
-		// I guess his mouth is on his hand
-		SLIDES_MOTOR_NAME      = "slides-motor",      /* expansion hub port 0 */
-		RIGHT_WRIST_SERVO_NAME = "right-wrist-servo", /* expansion hub port 1 */
-		LEFT_WRIST_SERVO_NAME  = "left-wrist-servo",  /* expansion hub port 3 */
-		RIGHT_ELBOW_SERVO_NAME = "right-elbow-servo", /* expansion hub port 2 */
-		LEFT_ELBOW_SERVO_NAME  = "left-elbow-servo",  /* expansion hub port 4 */
-
-		// FIXME: encoders must use the names of existing motors due to space constraints
-		LEFT_ENCODER_NAME      = "teeth-motor",       /* expansion hub port 1 */
-		BACK_ENCODER_NAME      = "back-encoder",      /* expansion hub port 2 */
-		RIGHT_ENCODER_NAME     = "right-encoder",     /* expansion hub port 3 */
-
-		LAUNCHER_SERVO_NAME    = "launcher-servo";    /* control hub port 5 */
 
 	/**
 	  * Creates a hardware object and initializes all hardware components.
@@ -73,10 +81,7 @@ public class Hardware
 
 	public static double deltaTime()
 	{
-		long now = System.nanoTime();
-		double delta = (now - lastTimestamp) / 1e9;
-		lastTimestamp = now;
-		return delta;
+		return (System.nanoTime() - lastTimestamp) / 1e9;
 	}
 
 	/**
@@ -87,6 +92,8 @@ public class Hardware
 	{
 		intake.loop();
 		slides.loop();
+
+		lastTimestamp = System.nanoTime();
 	}
 
 	/**
@@ -131,7 +138,12 @@ public class Hardware
 	  */
 	public String getDeviceName(HardwareDevice device)
 	{
-		Set<String> names = hardwareMap.getNamesOf(device);
+		return Hardware.getDeviceName(hardwareMap, device);
+	}
+
+	public static String getDeviceName(HardwareMap map, HardwareDevice device)
+	{
+		Set<String> names = map.getNamesOf(device);
 		return names.isEmpty() ? "<unknown device>" : names.toArray(new String[0])[0];
 	}
 }

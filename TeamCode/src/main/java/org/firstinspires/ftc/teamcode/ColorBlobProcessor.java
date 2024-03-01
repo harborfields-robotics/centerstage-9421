@@ -35,6 +35,7 @@ public class ColorBlobProcessor implements VisionProcessor
 
 	public List<Mat> split(Mat frame)
 	{
+        return null;
 	}
 
     public Object processFrame(Mat frame, long captureTimeNanos)
