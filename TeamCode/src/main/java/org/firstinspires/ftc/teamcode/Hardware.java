@@ -16,7 +16,7 @@ import java.util.Set;
   */
 public class Hardware
 {
-    public HardwareMap hardwareMap;
+	public HardwareMap hardwareMap;
 	public Drivetrain drivetrain;
 	public static Telemetry telemetry;
 	public DoubleVision doubleVision;
@@ -30,32 +30,30 @@ public class Hardware
 
 	// TODO: update configuration names
 	public static final String
-		WEBCAM_NAME             = "Webcam 1",          /* USB port             */
+		WEBCAM_NAME            = "Webcam 1",          /* USB port             */
 
-		FL_MOTOR_NAME           = "fl-motor",          /* control hub port 0   */
-		BL_MOTOR_NAME           = "bl-motor",          /* control hub port 1   */
-		BR_MOTOR_NAME           = "br-motor",          /* control hub port 2   */
-		FR_MOTOR_NAME           = "fr-motor",          /* control hub port 3   */
+		FL_MOTOR_NAME          = "fl-motor",          /* control hub port 0   */
+		BL_MOTOR_NAME          = "bl-motor",          /* control hub port 1   */
+		BR_MOTOR_NAME          = "br-motor",          /* control hub port 2   */
+		FR_MOTOR_NAME          = "fr-motor",          /* control hub port 3   */
 
 		// They're really more like lips to be honest but they _look_ like teeth
-		TEETH_MOTOR_NAME        = "teeth-motor",       /* expansion hub port 1 */
-		TONGUE_SERVO_NAME       = "tongue-servo",      /* expansion hub port 0 */
+		TEETH_MOTOR_NAME       = "teeth-motor",       /* expansion hub port 1 */
+		TONGUE_SERVO_NAME      = "tongue-servo",      /* expansion hub port 0 */
 
 		// I guess his mouth is on his hand
-		LEFT_SLIDES_MOTOR_NAME  = "left-slides-motor", /* expansion hub port 0 */
-		RIGHT_SLIDES_MOTOR_NAME = "right-slides-motor", /* expansion hub port 0 */
-		LIMIT_SWITCH_NAME       = "limit-switch",      /* control hub port 0   */
-		RIGHT_WRIST_SERVO_NAME  = "right-wrist-servo", /* expansion hub port 1 */
-		LEFT_WRIST_SERVO_NAME   = "left-wrist-servo",  /* expansion hub port 3 */
-		RIGHT_ELBOW_SERVO_NAME  = "right-elbow-servo", /* expansion hub port 2 */
-		LEFT_ELBOW_SERVO_NAME   = "left-elbow-servo",  /* expansion hub port 4 */
+		SLIDES_MOTOR_NAME      = "slides-motor",      /* expansion hub port 0 */
+		RIGHT_WRIST_SERVO_NAME = "right-wrist-servo", /* expansion hub port 1 */
+		LEFT_WRIST_SERVO_NAME  = "left-wrist-servo",  /* expansion hub port 3 */
+		RIGHT_ELBOW_SERVO_NAME = "right-elbow-servo", /* expansion hub port 2 */
+		LEFT_ELBOW_SERVO_NAME  = "left-elbow-servo",  /* expansion hub port 4 */
 
 		// FIXME: encoders must use the names of existing motors due to space constraints
-		LEFT_ENCODER_NAME       = "fr-motor",       /* expansion hub port 3 */
-		BACK_ENCODER_NAME       = "left-slides-motor", /* expansion hub port 2 */
-		RIGHT_ENCODER_NAME      = "right-encoder",     /* expansion hub port 1 */
+		LEFT_ENCODER_NAME      = "teeth-motor",       /* expansion hub port 1 */
+		BACK_ENCODER_NAME      = "back-encoder",      /* expansion hub port 2 */
+		RIGHT_ENCODER_NAME     = "right-encoder",     /* expansion hub port 3 */
 
-		LAUNCHER_SERVO_NAME     = "launcher-servo";    /* control hub port 5 */
+		LAUNCHER_SERVO_NAME    = "launcher-servo";    /* control hub port 5 */
 
 	/**
 	  * Creates a hardware object and initializes all hardware components.

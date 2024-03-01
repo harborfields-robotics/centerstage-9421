@@ -9,7 +9,6 @@ import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +18,6 @@ public class ColorBlobProcessor implements VisionProcessor
 {
     private Alliance alliance;
     private Hardware hardware;
-    public static double TR = 128, TB = 12128, MR = 255, MB = 255;
-    private Mat processed;
 
     public ColorBlobProcessor(Hardware hardware, Alliance alliance)
 	{
@@ -34,12 +31,10 @@ public class ColorBlobProcessor implements VisionProcessor
 
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext)
 	{
-        Util.canvasDrawMat(canvas, processed);
     }
 
 	public List<Mat> split(Mat frame)
 	{
-        return null;
 	}
 
     public Object processFrame(Mat frame, long captureTimeNanos)
@@ -51,10 +46,9 @@ public class ColorBlobProcessor implements VisionProcessor
 			middle = new Mat();
         Core.split(frame, channels);
 		if (alliance == Alliance.RED)
-			Imgproc.threshold(channels.get(0), twotone, /* thresh */ TR, /* maxval */ MR, /* type */ Imgproc.THRESH_BINARY);
+			Imgproc.threshold(channels.get(0), twotone, /* thresh */ 0.0, /* maxval */ 1.0, /* type */ Imgproc.THRESH_BINARY);
 		else
-			Imgproc.threshold(channels.get(2), twotone, /* thresh */ TB, /* maxval */ MB, /* type */ Imgproc.THRESH_BINARY);
-        processed = twotone;
+			Imgproc.threshold(channels.get(2), twotone, /* thresh */ 0.0, /* maxval */ 1.0, /* type */ Imgproc.THRESH_BINARY);
         return null;
     }
 }

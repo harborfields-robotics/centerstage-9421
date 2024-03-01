@@ -66,12 +66,9 @@ public class TwoControllerTeleOp extends OpMode
 
 		/* scoring (gamepad 2) */
 		double slidePower = -Math.pow(gamepad2.left_stick_y, 3) * 0.75;
-		if (gamepad2.left_bumper && gamepad2.right_bumper)
-			hardware.hardwareMap.getAll(DcMotor.class).forEach(Hardware::resetEncoder);
-		else if (gamepad2.left_bumper) {
-			hardware.slides.leftMotor.setPower(slidePower);
-			hardware.slides.rightMotor.setPower(slidePower);
-		} else
+		if (gamepad2.left_bumper)
+			hardware.slides.motor.setPower(slidePower);
+		else
 			hardware.slides.setPower(slidePower);
 
 		if (gamepad2.right_trigger > TRIGGER_THRESHOLD)

@@ -26,10 +26,10 @@ import java.lang.*;
   */
 public class DoubleVision
 {
-	public AprilTagProcessor aprilTag;
-	public TfodProcessor tfod;
-	public ColorBlobProcessor colorBlob;
-	public VisionPortal visionPortal;
+	private AprilTagProcessor aprilTag;
+	private TfodProcessor tfod;
+	private ColorBlobProcessor colorBlob;
+	private VisionPortal visionPortal;
 	private Hardware hardware;
     private WebcamName webcam;
 
@@ -63,7 +63,6 @@ public class DoubleVision
 			.setCameraResolution(CAMERA_RESOLUTION)
 			.addProcessors(tfod, aprilTag, colorBlob)
 			.build();
-		this.visionPortal.resumeStreaming();
 	}
 
 	/**

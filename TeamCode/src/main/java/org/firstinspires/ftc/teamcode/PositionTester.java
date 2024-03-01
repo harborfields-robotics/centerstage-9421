@@ -35,7 +35,7 @@ public class PositionTester extends LinearOpMode
                 hardware.slides.rightWristServo.setPosition(.417);
             }
             hardware.slides.setPower(((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0)) * 50 * Hardware.deltaTime());
-            telemetry.addData("slides", hardware.slides.leftMotor.getCurrentPosition());
+            telemetry.addData("slides", hardware.slides.motor.getCurrentPosition());
             telemetry.update();
         }
     }

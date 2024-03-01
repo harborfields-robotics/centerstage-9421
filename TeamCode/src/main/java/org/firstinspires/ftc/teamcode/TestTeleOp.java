@@ -25,10 +25,12 @@ public class TestTeleOp extends LinearOpMode
         waitForStart();
         runtime.reset();
 
+		Servo[] servos = { };
         while (opModeIsActive()) {
-            telemetry.addData("getValue", hardware.slides.limitSwitch.getValue());
-            telemetry.addData("isPressed", hardware.slides.limitSwitch.isPressed());
-            telemetry.update();
+			hardware.slides.leftWristServo.setPosition(1);
+			Util.sleep(1000);
+			hardware.slides.leftWristServo.setPosition(0);
+			Util.sleep(1000);
         }
     }
 }
